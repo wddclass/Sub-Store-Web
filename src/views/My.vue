@@ -257,6 +257,9 @@
       setDisplayInfo();
       isInit.value = true;
     }
+    if (githubUser.value) {
+      setDisplayInfo();
+    }
   });
 </script>
 

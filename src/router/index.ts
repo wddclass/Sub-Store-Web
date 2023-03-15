@@ -7,6 +7,7 @@ import Sub from '@/views/Sub.vue';
 import Sync from '@/views/Sync.vue';
 import My from '@/views/My.vue';
 import SubEditor from '@/views/SubEditor.vue';
+import SetApi from '@/views/SetApi.vue';
 import NotFound from '@/views/NotFound.vue';
 import { useSubsApi } from '@/api/subs';
 
@@ -64,6 +65,15 @@ const router = createRouter({
           },
         },
       ],
+    },
+    {
+      path: '/setApi',
+      component: SetApi,
+      meta: {
+        title: 'setApi',
+        needTabBar: false,
+        needNavBack: false,
+      },
     },
     {
       path: '/404',

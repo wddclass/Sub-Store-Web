@@ -13,11 +13,13 @@
   import { useGlobalStore } from '@/store/global';
   import { useI18n } from 'vue-i18n';
   import { initStores } from '@/utils/initApp';
+  import { useRouter } from 'vue-router';
 
   const { t } = useI18n();
 
   const subsStore = useSubsStore();
   const globalStore = useGlobalStore();
+  const router = useRouter();
 
   // 处于 pwa 时将底部安全距离写入 global store
   type NavigatorExtend = Navigator & {
@@ -35,6 +37,9 @@
     externalScript.src =
       'https://cdnjs.cloudflare.com/ajax/libs/inobounce/0.2.1/inobounce.min.js';
     document.head.appendChild(externalScript);
+    if (!window.localStorage.getItem('api')) {
+      router.push(`/setApi`);
+    }
   });
 
   // 初始化应用数据（顶部通知）

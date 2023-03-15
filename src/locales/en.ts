@@ -24,6 +24,7 @@ export default {
       my: 'My Profile',
       subEditor: 'Subscription Editor',
       notFound: '404 Not Found',
+      setApi: 'Set API Address',
     },
   },
   // Tab Bar

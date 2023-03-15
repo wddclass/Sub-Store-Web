@@ -24,6 +24,7 @@ export default {
       my: '我的',
       subEditor: '订阅编辑',
       notFound: '地址未找到',
+      setApi: '设置API地址',
     },
   },
   // 底部标签栏
