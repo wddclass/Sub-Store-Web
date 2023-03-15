@@ -247,6 +247,7 @@
     & > ul {
       margin: 8px 0;
       overflow: hidden;
+      padding-bottom: 100px;
 
       > li:not(:last-child) {
         margin-bottom: 12px;

@@ -106,6 +106,9 @@
           </nut-button>
         </div>
       </div>
+      <nut-cell-group title="设置">
+        <nut-cell title="设置API" to="/setApi"></nut-cell>
+      </nut-cell-group>
     </div>
     <div class="env-block">
       <img

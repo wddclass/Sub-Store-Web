@@ -16,6 +16,7 @@
           type="text"
           input-align="left"
           :left-icon="iconKey"
+          ref="inputDom"
         />
       </div>
       <div class="config-btn-wrapper">
@@ -40,17 +41,18 @@
 
   const router = useRouter();
   const apiAddress = ref('');
+  const inputDom = ref();
 
-  onMounted(() => {
+  onMounted(async () => {
     if (window.localStorage.getItem('api')) {
-      router.push(`/`);
+      apiAddress.value = window.localStorage.getItem('api');
     }
   });
 
   const confirm = () => {
     window.localStorage.setItem('api', apiAddress.value);
-    router.push(`/`);
-    location.reload();
+    router.push(`/subs`);
+    // location.reload();
   };
 </script>
 

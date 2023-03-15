@@ -72,7 +72,7 @@ const router = createRouter({
       meta: {
         title: 'setApi',
         needTabBar: false,
-        needNavBack: false,
+        needNavBack: true,
       },
     },
     {

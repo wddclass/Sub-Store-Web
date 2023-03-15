@@ -14,11 +14,11 @@ const service = axios.create({
 
 service.interceptors.response.use(
   (response: AxiosResponse<SucceedResponse>): AxiosPromise<SucceedResponse> => {
-    console.log('ddddddddd', response.data);
+    // console.log('ddddddddd', response.data);
     return Promise.resolve(response);
   },
   (e: AxiosError<ErrorResponse>): AxiosPromise<ErrorResponse | undefined> => {
-    console.log('eeeeeeeee', e.response);
+    // console.log('eeeeeeeee', e.response);
 
     // 流量信息接口的报错 返回错误
     if (e.config.url.startsWith('/api/sub/flow'))

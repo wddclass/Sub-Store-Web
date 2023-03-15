@@ -12,22 +12,32 @@
         </div>
         <p>{{ platform.name }}</p>
       </a>
+      <div
+        class="nut-button nut-button--primary nut-button--small nut-button--round"
+        @click="copyLink(platform.path)"
+      >
+        复制
+      </div>
     </li>
   </ul>
 </template>
 
 <script lang="ts" setup>
-  import surge from '@/assets/icons/surge.png?url'
-  import clash from '@/assets/icons/clash.png?url'
-  import quanx from '@/assets/icons/quanx.png?url'
-  import loon from '@/assets/icons/loon.png?url'
-  import stash from '@/assets/icons/stash.png?url'
+  import surge from '@/assets/icons/surge.png?url';
+  import clash from '@/assets/icons/clash.png?url';
+  import quanx from '@/assets/icons/quanx.png?url';
+  import loon from '@/assets/icons/loon.png?url';
+  import stash from '@/assets/icons/stash.png?url';
+  import { Notify } from '@nutui/nutui';
+  import useClipboard from 'vue-clipboard3';
+
+  const { toClipboard } = useClipboard();
 
   const { name, type } = defineProps<{
-    name: string
-    type: 'sub' | 'collection'
-  }>()
-  const host = window.localStorage.getItem('api')
+    name: string;
+    type: 'sub' | 'collection';
+  }>();
+  const host = window.localStorage.getItem('api');
   const platformList = [
     {
       name: 'Clash',
@@ -55,7 +65,17 @@
       path: 'Stash',
       icon: stash,
     },
-  ]
+  ];
+
+  const copyLink = async path => {
+    const url = `${host}/download/${
+      type === 'sub' ? '' : 'collection/'
+    }${name}?target=${path}`;
+    await toClipboard(url);
+    Notify.success('复制成功', {
+      duration: 1500,
+    });
+  };
 </script>
 
 <style lang="scss" scoped>
@@ -73,7 +93,9 @@
 
     > li {
       width: 100%;
-
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       .dark-mode &:not(:last-child) {
         border-bottom: 1px solid $dark-divider-color;
       }
@@ -107,5 +129,8 @@
         }
       }
     }
+  }
+  .nut-button--small {
+    line-height: 32px;
   }
 </style>
