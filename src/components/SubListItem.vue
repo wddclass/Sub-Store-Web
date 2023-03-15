@@ -261,7 +261,7 @@
 
   const onClickCopyLink = async () => {
     try {
-      const host = import.meta.env.VITE_API_URL;
+      const host = window.localStorage.getItem('api');
       const url = `${host}/download/${
         props.type === 'collection' ? 'collection/' : ''
       }${name}`;
