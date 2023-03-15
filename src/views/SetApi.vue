@@ -15,6 +15,7 @@
           v-model="apiAddress"
           type="text"
           input-align="left"
+          rows="4"
           :left-icon="iconKey"
           ref="inputDom"
         />
@@ -87,7 +88,7 @@
     }
 
     .config-input-wrapper {
-      padding: 0 12px;
+      padding: 0;
 
       .input.nut-input-disabled {
         :deep(input):disabled {
@@ -102,7 +103,7 @@
 
       .input {
         background: transparent;
-        padding: 16px;
+        padding: 0 16px;
 
         :deep(img) {
           width: 16px;
@@ -126,6 +127,9 @@
         .dark-mode & {
           color: $dark-second-text-color;
           border-color: $dark-lowest-text-color;
+          .nut-textarea__textarea {
+            color: white;
+          }
         }
 
         .light-mode & {

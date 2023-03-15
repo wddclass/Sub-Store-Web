@@ -457,4 +457,16 @@
       }
     }
   }
+  .nut-cell {
+    border-radius: 10px !important;
+    .dark-mode & {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
+    .light-mode & {
+      background: rgba(255, 255, 255, 0.1);
+      color: rgba(0, 0, 0, 0.8);
+    }
+  }
 </style>
