@@ -7,6 +7,7 @@ const settingsApi = useSettingsApi();
 const { t } = i18n.global;
 
 export const useSettingsStore = defineStore('settingsStore', {
+  persist: true,
   state: (): SettingsStoreState => {
     return {
       gistToken: '',

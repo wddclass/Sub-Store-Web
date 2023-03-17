@@ -142,13 +142,13 @@
       )}`;
     }
   });
-  const { isLoading } = storeToRefs(globalStore);
+  // const { isLoading } = storeToRefs(globalStore);
 
   const flow = computed(() => {
     if (props.type === 'sub') {
       if (props.sub.source === 'local') return t('subPage.subItem.local');
-      if (isLoading.value) return t('subPage.subItem.loading');
-
+      if (props.sub.loading) return t('subPage.subItem.loading');
+      // if (isLoading.value) return t('subPage.subItem.loading');
       const target = toRaw(flows.value[props.sub.url]);
       if (!target) {
         return {

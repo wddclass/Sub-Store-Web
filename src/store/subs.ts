@@ -4,6 +4,7 @@ import { useSubsApi } from '@/api/subs';
 const subsApi = useSubsApi();
 
 export const useSubsStore = defineStore('subsStore', {
+  persist: true,
   state: (): SubsStoreState => {
     return {
       subs: [],
@@ -52,24 +53,40 @@ export const useSubsStore = defineStore('subsStore', {
 
       // 提取所有的 remote 的 url，储存为 hash 表
       this.subs.forEach(sub => {
+        sub.loading = true;
         if (sub.source === 'remote') {
           flowNameHash[sub.url]
             ? flowNameHash[sub.url].push(sub.name)
             : (flowNameHash[sub.url] = [sub.name]);
         }
       });
-
       // 取出每个 hash 表里每个 url 的第一个 name
       for (const url in flowNameHash) {
         nameList.push([url, flowNameHash[url][0]]);
       }
 
       // 用该 name 请求流量信息 并按 url 存入 store 中
-      for (let i = 0; i < nameList.length; i++) {
-        const [url, name] = nameList[i];
-        const { data } = await subsApi.getFlow(name);
-        this.flows[url] = data;
-      }
+      // for (let i = 0; i < nameList.length; i++) {
+      //   const [url, name] = nameList[i];
+      //   subsApi.getFlow(name).then(data => {
+      //     this.subs.find(item => item.name == name).loading = false;
+      //     this.flows[url] = data;
+      //   });
+      //   // const { data } = await subsApi.getFlow(name);
+      //   // this.subs.find(item => item.name == name).loading = false;
+      //   // this.flows[url] = data;
+      // }
+      // 优化异步请求流量信息
+      await Promise.all(
+        nameList.map(async item => {
+          const [url, name] = item;
+          const { data } = await subsApi.getFlow(name);
+          this.subs
+            .filter(item => item.url == url)
+            .map(item => (item.loading = false));
+          this.flows[url] = data;
+        })
+      );
     },
     async deleteSub(type: SubsType, name: string) {
       const { data } = await subsApi.deleteSub(type, name);

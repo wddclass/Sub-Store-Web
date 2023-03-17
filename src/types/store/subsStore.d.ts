@@ -35,6 +35,7 @@ interface Sub {
   icon?: string;
   ua?: string;
   process: Process[];
+  loading?: boolean
 }
 
 interface Collection {

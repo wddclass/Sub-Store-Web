@@ -16,9 +16,12 @@ import 'modern-css-reset/dist/reset.min.css';
 import '@/assets/fonts.scss';
 import '@/assets/global_overwritten_nutui.scss';
 
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
+
 import App from './App.vue';
 
 const pinia = createPinia();
+pinia.use(piniaPluginPersistedstate);
 const app = createApp(App);
 
 nutUi(app);
