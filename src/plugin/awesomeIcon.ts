@@ -21,6 +21,8 @@ import {
   faCloudArrowUp,
   faBan,
   faPenToSquare,
+  faCircleHalfStroke,
+  faRotateRight
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(faLanguage);
@@ -43,3 +45,5 @@ library.add(faCloudArrowDown);
 library.add(faCloudArrowUp);
 library.add(faBan);
 library.add(faPenToSquare);
+library.add(faCircleHalfStroke);
+library.add(faRotateRight);

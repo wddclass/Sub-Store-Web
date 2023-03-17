@@ -1,6 +1,6 @@
 <template>
   <nut-swipe class="sub-item-swipe" ref="swipe">
-    <div class="sub-item-wrapper" @click="compareSub">
+    <div class="sub-item-wrapper" @click="onClickEdit">
       <div class="sub-img-wrapper">
         <nut-avatar
           class="sub-item-customer-icon"
@@ -17,8 +17,11 @@
             {{ displayName || name }}
           </h3>
           <div>
+            <button class="copy-sub-link" @click.stop="onClickUpdateSub">
+              <font-awesome-icon icon="fa-solid fa-rotate-right" />
+            </button>
             <button class="copy-sub-link" @click.stop="onClickCopyLink">
-              <font-awesome-icon icon="fa-solid fa-clone"></font-awesome-icon>
+              <font-awesome-icon icon="fa-solid fa-clone" />
             </button>
             <button
               class="copy-sub-link"
@@ -65,9 +68,10 @@
           shape="square"
           type="warning"
           class="sub-item-swipe-btn"
-          @click="onClickEdit"
+          @click="compareSub"
         >
-          <font-awesome-icon icon="fa-solid fa-pen-nib" />
+          <font-awesome-icon icon="fa-solid fa-circle-half-stroke" />
+          <!-- <font-awesome-icon icon="fa-solid fa-pen-nib" /> -->
         </nut-button>
       </div>
       <div class="sub-item-swipe-btn-wrapper">
@@ -257,6 +261,11 @@
       closeOnPopstate: true,
       lockScroll: true,
     });
+  };
+
+  const onClickUpdateSub = async () => {
+    // console.log(props.sub.url);
+    await subsStore.fetchSingleFlow(props.sub.url, props.sub.name);
   };
 
   const onClickCopyLink = async () => {

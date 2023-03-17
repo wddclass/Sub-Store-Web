@@ -88,6 +88,16 @@ export const useSubsStore = defineStore('subsStore', {
         })
       );
     },
+    async fetchSingleFlow(url: string, name: string) {
+      this.subs
+        .filter(item => item.url == url)
+        .map(item => (item.loading = true));
+      const { data } = await subsApi.getFlow(name);
+      this.subs
+        .filter(item => item.url == url)
+        .map(item => (item.loading = false));
+      this.flows[url] = data;
+    },
     async deleteSub(type: SubsType, name: string) {
       const { data } = await subsApi.deleteSub(type, name);
       if (data.status === 'success') {
