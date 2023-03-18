@@ -88,6 +88,7 @@
     top: 0;
     height: v-bind(navBarHeight);
     z-index: 20;
+    max-width: var(--main-max-width);
 
     nav {
       .nut-navbar {

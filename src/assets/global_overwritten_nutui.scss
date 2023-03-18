@@ -1,6 +1,36 @@
 // 引入定义变量scss文件
 @import 'custom_theme_variables.scss';
 
+:root {
+  --main-max-width: 450px;
+}
+html,
+body {
+  max-width: var(--main-max-width);
+}
+.layout {
+  width: 100vw;
+  height: 100vh;
+  background: #e6e6e6;
+}
+.main-layout {
+  position: relative;
+  max-width: var(--main-max-width);
+  height: 100%;
+  margin: 0 auto;
+  background: white;
+}
+.nut-overlay,
+.nut-popup,
+.bottom-btn-wrapper {
+  max-width: var(--main-max-width);
+  left: 50%;
+  transform: translateX(-50%);
+}
+.popup-center {
+  transform: translate(-50%, -50%);
+}
+
 // 顶部粘性定位标题样式
 .sticky-title-wrapper {
   position: sticky;

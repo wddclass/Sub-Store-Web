@@ -532,6 +532,7 @@
     z-index: 1000;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
+    max-width: var(--main-max-width);
 
     .dark-mode & {
       background: $dark-background-color;

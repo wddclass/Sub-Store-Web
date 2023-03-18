@@ -1,56 +1,90 @@
 <template>
   <nut-swipe class="sub-item-swipe" ref="swipe">
     <div class="sub-item-wrapper" @click="onClickEdit">
-      <div class="sub-img-wrapper">
-        <nut-avatar
-          class="sub-item-customer-icon"
-          v-if="props[props.type].icon"
-          size="60"
-          :url="props[props.type].icon"
-          bg-color=""
-        ></nut-avatar>
-        <nut-avatar v-else :icon="icon"></nut-avatar>
-      </div>
-      <div class="sub-item-content">
-        <div class="sub-item-title-wrapper">
-          <h3 class="sub-item-title">
-            {{ displayName || name }}
-          </h3>
-          <div>
-            <button class="copy-sub-link" @click.stop="onClickUpdateSub">
-              <font-awesome-icon icon="fa-solid fa-rotate-right" />
-            </button>
-            <button class="copy-sub-link" @click.stop="onClickCopyLink">
-              <font-awesome-icon icon="fa-solid fa-clone" />
-            </button>
-            <button
-              class="copy-sub-link"
-              @click.stop="swipeController"
-              ref="moreAction"
-              >
-              <!-- v-if="!isMobile()" -->
-              <font-awesome-icon icon="fa-solid fa-angles-right" />
-            </button>
-          </div>
+      <div class="sub-item-top-wrapper">
+        <div class="sub-img-wrapper">
+          <nut-avatar
+            class="sub-item-customer-icon"
+            v-if="props[props.type].icon"
+            size="60"
+            :url="props[props.type].icon"
+            bg-color=""
+          ></nut-avatar>
+          <nut-avatar v-else :icon="icon"></nut-avatar>
         </div>
+        <div class="sub-item-content">
+          <div class="sub-item-title-wrapper">
+            <h3 class="sub-item-title">
+              {{ displayName || name }}
+            </h3>
+            <div>
+              <button class="copy-sub-link" @click.stop="onClickUpdateSub">
+                <font-awesome-icon icon="fa-solid fa-rotate-right" />
+              </button>
+              <button class="copy-sub-link" @click.stop="onClickCopyLink">
+                <font-awesome-icon icon="fa-solid fa-clone" />
+              </button>
+              <button
+                class="copy-sub-link"
+                @click.stop="swipeController"
+                ref="moreAction"
+              >
+                <!-- v-if="!isMobile()" -->
+                <font-awesome-icon icon="fa-solid fa-angles-right" />
+              </button>
+            </div>
+          </div>
 
-        <p v-if="type === 'sub'" class="sub-item-detail">
-          <template v-if="typeof flow === 'string'">
-            <span>
-              {{ flow }}
-            </span>
-          </template>
-          <template v-else>
-            <span>
-              {{ flow.firstLine }}
-            </span>
-            <span> {{ flow.secondLine }} </span>
-          </template>
-        </p>
-        <p v-else-if="type === 'collection'" class="sub-item-detail">
-          {{ collectionDetail }}
-        </p>
+          <p v-if="type === 'sub'" class="sub-item-detail">
+            <template v-if="typeof flow === 'string'">
+              <span>
+                {{ flow }}
+              </span>
+            </template>
+            <template v-else>
+              <span>
+                {{ flow.firstLine }}
+              </span>
+              <span> {{ flow.secondLine }} </span>
+            </template>
+          </p>
+          <p v-else-if="type === 'collection'" class="sub-item-detail">
+            {{ collectionDetail }}
+          </p>
+        </div>
       </div>
+      <!-- <div class="sub-item-bottom-wrapper">
+      <div class="sub-item-swipe-btn-wrapper">
+        <nut-button
+          shape="square"
+          type="success"
+          class="sub-item-swipe-btn"
+          @click="onClickPreview"
+        >
+          <font-awesome-icon icon="fa-solid fa-eye" />
+        </nut-button>
+      </div>
+      <div class="sub-item-swipe-btn-wrapper">
+        <nut-button
+          shape="square"
+          type="warning"
+          class="sub-item-swipe-btn"
+          @click="compareSub"
+        >
+          <font-awesome-icon icon="fa-solid fa-circle-half-stroke" />
+        </nut-button>
+      </div>
+      <div class="sub-item-swipe-btn-wrapper">
+        <nut-button
+          shape="square"
+          type="danger"
+          class="sub-item-swipe-btn"
+          @click="onClickDelete"
+        >
+          <font-awesome-icon icon="fa-solid fa-trash-can" />
+        </nut-button>
+      </div>
+    </div> -->
     </div>
     <template #right>
       <div class="sub-item-swipe-btn-wrapper">
@@ -71,7 +105,6 @@
           @click="compareSub"
         >
           <font-awesome-icon icon="fa-solid fa-circle-half-stroke" />
-          <!-- <font-awesome-icon icon="fa-solid fa-pen-nib" /> -->
         </nut-button>
       </div>
       <div class="sub-item-swipe-btn-wrapper">
@@ -276,7 +309,7 @@
       }${name}`;
       await toClipboard(url);
       Notify.success(t('subPage.copyNotify.succeed'), {
-        duration: 1500,
+        duration: 1500000,
       });
     } catch (e) {
       Notify.danger(t('subPage.copyNotify.succeed', { e }), {
@@ -311,14 +344,15 @@
       }
     }
   }
-
+  .sub-item-top-wrapper {
+    display: flex;
+  }
   .sub-item-wrapper {
     width: calc(100% - 24px);
     margin-left: auto;
     margin-right: auto;
     border-radius: $item-card-radios;
     padding: $safe-area-side;
-    display: flex;
 
     .dark-mode & {
       background: $dark-card-color;
@@ -341,7 +375,7 @@
       }
     }
 
-    > .sub-item-content {
+    .sub-item-content {
       flex: 1;
 
       .sub-item-title-wrapper {

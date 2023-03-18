@@ -51,6 +51,7 @@
 
   .tab-bar-wrapper {
     .tabbar {
+      max-width: var(--main-max-width);
       padding-top: 12px;
       padding-bottom: v-bind('style.paddingBottom');
       box-shadow: none;
@@ -67,7 +68,10 @@
         border-top: $light-divider-color solid 1px;
       }
     }
-
+    .nut-tabbar-bottom {
+      left: 50%;
+      transform: translateX(-50%);
+    }
     :deep(.tabbar-item) {
       &.nut-tabbar-item__icon--unactive {
         .dark-mode & {
