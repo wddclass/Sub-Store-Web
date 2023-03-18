@@ -26,9 +26,9 @@
             <button
               class="copy-sub-link"
               @click.stop="swipeController"
-              v-if="!isMobile()"
               ref="moreAction"
-            >
+              >
+              <!-- v-if="!isMobile()" -->
               <font-awesome-icon icon="fa-solid fa-angles-right" />
             </button>
           </div>

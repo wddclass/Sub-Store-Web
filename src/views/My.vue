@@ -7,6 +7,7 @@
             :class="{ 'avatar-normal': !githubUser }"
             size="72"
             :icon="displayAvatar"
+            @click="showVConsole"
           />
           <div class="name">
             <p class="title">
@@ -150,6 +151,7 @@
   const { env } = storeToRefs(globalStore);
   const { githubUser, gistToken, syncTime, avatarUrl } =
     storeToRefs(settingsStore);
+  const showVConsoleTimes = ref(0);
 
   const displayAvatar = computed(() => {
     return !githubUser.value ? avatar : avatarUrl.value;
@@ -264,6 +266,13 @@
       setDisplayInfo();
     }
   });
+
+  const showVConsole = () => {
+    showVConsoleTimes.value += 1;
+    if (showVConsoleTimes.value >= 10) {
+      window.initvConsole.showSwitch();
+    }
+  };
 </script>
 
 <style lang="scss" scoped>

@@ -28,6 +28,7 @@
   import quanx from '@/assets/icons/quanx.png?url';
   import loon from '@/assets/icons/loon.png?url';
   import stash from '@/assets/icons/stash.png?url';
+  import shadowrocket from '@/assets/icons/shadowrocket.png?url';
   import { Notify } from '@nutui/nutui';
   import useClipboard from 'vue-clipboard3';
 
@@ -64,6 +65,11 @@
       name: 'Stash',
       path: 'Stash',
       icon: stash,
+    },
+    {
+      name: 'ShadowRocket',
+      path: 'ShadowRocket',
+      icon: shadowrocket,
     },
   ];
 
@@ -113,7 +119,7 @@
         div {
           width: 40px;
           height: 40px;
-          margin-right: 16px;
+          margin-right: 6px;
         }
 
         p {
