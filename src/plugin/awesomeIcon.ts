@@ -22,7 +22,7 @@ import {
   faBan,
   faPenToSquare,
   faCircleHalfStroke,
-  faRotateRight
+  faRotateRight,
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(faLanguage);
