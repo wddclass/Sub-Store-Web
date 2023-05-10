@@ -4,18 +4,36 @@
       <div class="sub-img-wrapper">
         <nut-avatar
           class="sub-item-customer-icon"
-          v-if="props[props.type].icon"
-          size="60"
-          :url="props[props.type].icon"
+          size="48"
+          :url="props[props.type].icon || icon"
           bg-color=""
         ></nut-avatar>
-        <nut-avatar v-else :icon="icon"></nut-avatar>
       </div>
       <div class="sub-item-content">
         <div class="sub-item-title-wrapper">
           <h3 class="sub-item-title">
             {{ displayName || name }}
           </h3>
+          <!-- <div>
+            <button class="copy-sub-link" @click.stop="onClickCopyLink">
+              <font-awesome-icon icon="fa-solid fa-clone"></font-awesome-icon>
+            </button>
+            <button
+              class="refresh-sub-flow"
+              @click.stop="onClickRefresh"
+              v-if="props.type === 'sub'"
+            >
+              <font-awesome-icon icon="fa-solid fa-arrow-rotate-right" />
+            </button>
+            <button
+              class="copy-sub-link"
+              @click.stop="swipeController"
+              v-if="!isMobile()"
+              ref="moreAction"
+            >
+              <font-awesome-icon icon="fa-solid fa-angles-right" />
+            </button>
+          </div> -->
         </div>
 
         <p v-if="type === 'sub'" class="sub-item-detail">
@@ -62,29 +80,34 @@
   </div>
   <CompareTable
     v-if="compareTableIsVisible"
+    :name="name"
     :compareData="compareData"
     @closeCompare="closeCompare"
   />
 </template>
 
 <script lang="ts" setup>
-  import CompareTable from '@/views/CompareTable.vue';
-  import PreviewPanel from '@/components/PreviewPanel.vue';
-  import icon from '@/assets/icons/logo.png';
-  import { isMobile } from '@/utils/isMobile';
-  import { Dialog, Notify, Toast } from '@nutui/nutui';
-  import dayjs from 'dayjs';
-  import { createVNode, ref, computed, toRaw } from 'vue';
-  import { useRouter } from 'vue-router';
-  import useClipboard from 'vue-clipboard3';
-  import { useSubsStore } from '@/store/subs';
-  import { storeToRefs } from 'pinia';
-  import { useGlobalStore } from '@/store/global';
-  import { getString } from '@/utils/flowTransfer';
-  import { useI18n } from 'vue-i18n';
   import { useSubsApi } from '@/api/subs';
+  import icon from '@/assets/icons/logo.svg';
+  import PreviewPanel from '@/components/PreviewPanel.vue';
+  import { usePopupRoute } from '@/hooks/usePopupRoute';
+  import { useAppNotifyStore } from '@/store/appNotify';
+  import { useGlobalStore } from '@/store/global';
+  import { useSubsStore } from '@/store/subs';
+  import { getString } from '@/utils/flowTransfer';
+  import { isMobile } from '@/utils/isMobile';
+  import CompareTable from '@/views/CompareTable.vue';
+  import { Dialog, Toast } from '@nutui/nutui';
+  import { useClipboard } from '@vueuse/core';
+  import dayjs from 'dayjs';
+  import { storeToRefs } from 'pinia';
+  import { computed, createVNode, ref, toRaw } from 'vue';
+  import useV3Clipboard from 'vue-clipboard3';
+  import { useI18n } from 'vue-i18n';
+  import { useRouter } from 'vue-router';
 
-  const { toClipboard } = useClipboard();
+  const { copy, isSupported } = useClipboard();
+  const { toClipboard: copyFallback } = useV3Clipboard();
   const { t } = useI18n();
 
   const props = defineProps<{
@@ -92,15 +115,17 @@
     sub?: Sub;
     collection?: Collection;
   }>();
+  const compareTableIsVisible = ref(false);
+  usePopupRoute(compareTableIsVisible);
 
   const moreAction = ref();
   const swipe = ref();
   const swipeIsOpen = ref(false);
-  const compareTableIsVisible = ref(false);
   const compareData = ref();
   const router = useRouter();
   const globalStore = useGlobalStore();
   const subsStore = useSubsStore();
+  const subsApi = useSubsApi();
   const displayName =
     props[props.type].displayName || props[props.type]['display-name'];
 
@@ -120,13 +145,16 @@
       )}`;
     }
   });
-  // const { isLoading } = storeToRefs(globalStore);
+  const { isFlowFetching } = storeToRefs(globalStore);
 
   const flow = computed(() => {
     if (props.type === 'sub') {
+      const urlList = Object.keys(flows.value);
       if (props.sub.source === 'local') return t('subPage.subItem.local');
       if (props.sub.loading) return t('subPage.subItem.loading');
-      // if (isLoading.value) return t('subPage.subItem.loading');
+      if (isFlowFetching.value && !urlList.includes(props.sub.url))
+        return t('subPage.subItem.loading');
+
       const target = toRaw(flows.value[props.sub.url]);
       if (!target) {
         return {
@@ -141,31 +169,44 @@
           total,
           usage: { upload, download },
         } = target.data;
+
+        const secondLine = !expires
+          ? t('subPage.subItem.noExpiresInfo')
+          : `${t('subPage.subItem.expires')}：${dayjs
+              .unix(expires)
+              .format('YYYY-MM-DD')}`;
+
         return {
           firstLine: `${t('subPage.subItem.flow')}：${getString(
             upload + download,
             total,
             'B'
           )}`,
-          secondLine: `${t('subPage.subItem.expires')}：${dayjs
-            .unix(expires)
-            .format('YYYY-MM-DD')}`,
+          secondLine,
         };
       } else if (target?.status === 'failed') {
-        return {
-          firstLine: `Type: ${target.error?.type}`,
-          secondLine: `Msg: ${target.error?.message}`,
-        };
+        if (target.error.code === 'NO_FLOW_INFO') {
+          return {
+            firstLine: t('subPage.subItem.noFlowInfo'),
+            secondLine: ``,
+          };
+        } else {
+          return {
+            firstLine: `${target.error?.type}`,
+            secondLine: `${target.error?.message}`,
+          };
+        }
       }
     }
   });
 
   const closeCompare = () => {
     compareTableIsVisible.value = false;
+    router.back();
   };
 
   const compareSub = async () => {
-    Toast.loading('生成节点对比中...', { id: 'compare' });
+    Toast.loading('生成节点对比中...', { id: 'compare', cover: true });
     const res = await useSubsApi().compareSub(
       props.type,
       props.sub ?? props.collection
@@ -190,13 +231,8 @@
   };
 
   const onDeleteConfirm = async () => {
-    try {
-      await subsStore.deleteSub(props.type, name);
-      await subsStore.fetchSubsData();
-      Notify.danger(t('subPage.deleteSub.succeedNotify'), { duration: 1500 });
-    } catch (e) {
-      Notify.danger(e.message, { duration: 1500 });
-    }
+    await subsStore.deleteSub(props.type, name);
+    // Notify.danger(t('subPage.deleteSub.succeedNotify'), { duration: 1500 });
   };
 
   const onClickPreview = () => {
@@ -212,6 +248,26 @@
       closeOnPopstate: true,
       lockScroll: true,
     });
+  };
+
+  const onClickCopyConfig = async () => {
+    let data;
+    switch (props.type) {
+      case 'sub':
+        data = JSON.parse(JSON.stringify(toRaw(props.sub)));
+        break;
+      case 'collection':
+        data = JSON.parse(JSON.stringify(toRaw(props.collection)));
+        break;
+    }
+    data.name += `-copy${~~(Math.random() * 10000)}`;
+
+    Toast.loading(t('subPage.copyConfigNotify.loading'), { id: 'copyConfig' });
+    await subsApi.createSub(props.type + 's', data);
+    await subsStore.fetchSubsData();
+    Toast.hide('copyConfig');
+    showNotify({ title: t('subPage.copyConfigNotify.succeed') });
+    swipe.value.close();
   };
 
   const onClickEdit = () => {
@@ -237,104 +293,54 @@
     });
   };
 
+  const { showNotify } = useAppNotifyStore();
+
   const onClickUpdateSub = async () => {
     // console.log(props.sub.url);
     await subsStore.fetchSingleFlow(props.sub.url, props.sub.name);
   };
-
   const onClickCopyLink = async () => {
-    try {
-      const host = window.localStorage.getItem('api');
-      const url = `${host}/download/${
-        props.type === 'collection' ? 'collection/' : ''
-      }${name}`;
-      await toClipboard(url);
-      Notify.success(t('subPage.copyNotify.succeed'), {
-        duration: 1500,
-      });
-    } catch (e) {
-      Notify.danger(t('subPage.copyNotify.succeed', { e }), {
-        duration: 1500,
-      });
-      console.error(e);
+    const host = import.meta.env.VITE_API_URL;
+    const url = `${host}/download/${
+      props.type === 'collection' ? 'collection/' : ''
+    }${name}`;
+
+    if (isSupported) {
+      await copy(encodeURI(url));
+    } else {
+      await copyFallback(encodeURI(url));
     }
+    showNotify({ title: t('subPage.copyNotify.succeed'), type: 'success' });
+  };
+  const onClickRefresh = async () => {
+    Toast.loading(t('globalNotify.refresh.loading'), {
+      cover: true,
+      id: 'refresh',
+    });
+    await subsStore.fetchFlows(ref([props.sub]).value);
+    Toast.hide('refresh');
+    showNotify({ title: t('globalNotify.refresh.succeed') });
   };
 </script>
 
 <style lang="scss" scoped>
-  @import '@/assets/custom_theme_variables.scss';
-
-  .dark-mode {
-    background-color: $dark-background-color;
-    .sub-item-customer-icon {
-      :deep(img) {
-        & {
-          filter: brightness(1000%);
-        }
+  .sub-item-customer-icon {
+    :deep(img) {
+      & {
+        filter: brightness(var(--img-brightness));
       }
     }
   }
 
-  .light-mode {
-    background-color: $light-background-color;
-    .sub-item-customer-icon {
-      :deep(img) {
-        & {
-          filter: brightness(0);
-        }
-      }
-    }
-  }
-  .sub-item-top-wrapper {
-    display: flex;
-    padding-bottom: 8px;
-    .sub-img-wrapper {
-      display: flex;
-      align-items: center;
-    }
-  }
-  .sub-item-bottom-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-top: 8px;
-    .custom-button {
-      background-color: transparent;
-      border: none;
-      padding: 0 12px;
-      cursor: pointer;
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-
-      svg {
-        width: 20px;
-        height: 20px;
-
-        .dark-mode & {
-          color: $dark-lowest-text-color;
-        }
-
-        .light-mode & {
-          color: $light-lowest-text-color;
-        }
-      }
-    }
-  }
   .sub-item-wrapper {
     width: calc(100% - 24px);
     margin-left: auto;
     margin-right: auto;
-    border-radius: $item-card-radios;
-    padding: $safe-area-side;
-
-    .dark-mode & {
-      background: $dark-card-color;
-    }
-
-    .light-mode & {
-      background: $light-card-color;
-    }
+    border-radius: var(--item-card-radios);
+    padding: var(--safe-area-side);
+    display: flex;
+    flex-direction: column;
+    background: var(--card-color);
 
     :deep(.nut-avatar) {
       flex-shrink: 0;
@@ -348,62 +354,84 @@
         border-radius: 10px;
       }
     }
-
-    .sub-item-content {
-      flex: 1;
-
-      .sub-item-title-wrapper {
+    .sub-item-top-wrapper {
+      display: flex;
+      padding-bottom: 8px;
+      .sub-img-wrapper {
         display: flex;
-        justify-content: space-between;
         align-items: center;
+      }
 
-        .sub-item-title {
+      > .sub-item-content {
+        flex: 1;
+
+        .sub-item-title-wrapper {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          .sub-item-title {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 1;
+            word-wrap: break-word;
+            word-break: break-all;
+            overflow: hidden;
+            font-size: 16px;
+            color: var(--primary-text-color);
+          }
+        }
+
+        .sub-item-detail {
           display: -webkit-box;
           -webkit-box-orient: vertical;
-          -webkit-line-clamp: 1;
+          -webkit-line-clamp: 3;
           word-wrap: break-word;
           word-break: break-all;
           overflow: hidden;
-          font-size: 16px;
+          margin-top: 4px;
+          font-size: 12px;
+          color: var(--comment-text-color);
 
-          .dark-mode & {
-            color: $dark-primary-text-color;
-          }
-
-          .light-mode & {
-            color: $light-primary-text-color;
+          span {
+            display: block;
+            line-height: 1.8;
           }
         }
       }
+    }
+    .sub-item-bottom-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 8px;
+      .custom-button {
+        background-color: transparent;
+        border: none;
+        padding: 0 8px;
+        cursor: pointer;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
 
-      .sub-item-detail {
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 3;
-        word-wrap: break-word;
-        word-break: break-all;
-        overflow: hidden;
-        margin-top: 6px;
-        font-size: 14px;
-
-        span {
-          display: block;
-          line-height: 1.4;
-        }
-
-        .dark-mode & {
-          color: $dark-comment-text-color;
-        }
-
-        .light-mode & {
-          color: $light-comment-text-color;
+        svg {
+          width: 16px;
+          height: 16px;
+          color: var(--lowest-text-color);
         }
       }
     }
   }
 
   .sub-item-swipe {
-    :deep(.nut-swipe__right) {
+    :deep(.nut-swipe__left) {
+      .sub-item-swipe-btn-wrapper {
+        padding-left: 24px;
+      }
+    }
+
+    :deep(.nut-swipe__right),
+    :deep(.nut-swipe__left) {
       display: flex;
       justify-content: space-around;
       align-items: center;

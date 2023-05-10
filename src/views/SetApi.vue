@@ -12,7 +12,7 @@
       <div class="config-input-wrapper">
         <nut-textarea
           class="input"
-          v-model="apiAddress"
+          v-model="apiUrl"
           type="text"
           input-align="left"
           rows="4"
@@ -28,7 +28,7 @@
           @click="confirm"
         >
           <font-awesome-icon icon="fa-solid fa-floppy-disk" />
-          确认
+          {{ $t(`themeSettingPage.themePicker.confirm`) }}
         </nut-button>
       </div>
     </div>
@@ -39,47 +39,42 @@
   import { ref, onMounted } from 'vue';
   import iconKey from '@/assets/icons/key-solid.svg?url';
   import { useRouter } from 'vue-router';
+  import service from '@/api';
+  import { initStores } from '@/utils/initApp';
 
   const router = useRouter();
-  const apiAddress = ref('');
+  const apiUrl = ref('');
   const inputDom = ref();
 
   onMounted(async () => {
     if (window.localStorage.getItem('api')) {
-      apiAddress.value = window.localStorage.getItem('api');
+      apiUrl.value = window.localStorage.getItem('api');
     }
   });
 
   const confirm = () => {
-    window.localStorage.setItem('api', apiAddress.value);
-    router.push(`/subs`);
-    // location.reload();
+    window.localStorage.setItem('api', apiUrl.value);
+    service.defaults.baseURL = apiUrl.value;
+    router.push(`/`);
+    // 初始化应用数据（顶部通知）
+    initStores(true, true, false);
   };
 </script>
 
 <style lang="scss">
-  @import '@/assets/custom_theme_variables.scss';
   .setapi-page-wrapper {
     display: flex;
     align-items: center;
     height: 100%;
-    padding: $safe-area-side;
+    padding: var(--safe-area-side);
   }
   .config-card {
     margin-top: 20px;
     width: 100%;
     padding: 12px;
-    border-radius: $item-card-radios;
-
-    .dark-mode & {
-      color: $dark-comment-text-color;
-      background: $dark-card-color;
-    }
-
-    .light-mode & {
-      color: $light-comment-text-color;
-      background: $light-card-color;
-    }
+    border-radius: var(--item-card-radios);
+    color: var(--comment-text-color);
+    background-color: var(--compare-item-background-color);
 
     h1 {
       font-size: 14px;
@@ -93,10 +88,10 @@
       .input.nut-input-disabled {
         :deep(input):disabled {
           .dark-mode & {
-            -webkit-text-fill-color: $dark-lowest-text-color;
+            -webkit-text-fill-color: var(--dark-lowest-text-color);
           }
           .light-mode & {
-            -webkit-text-fill-color: $light-lowest-text-color;
+            -webkit-text-fill-color: var(--light-lowest-text-color);
           }
         }
       }
@@ -125,16 +120,16 @@
         }
 
         .dark-mode & {
-          color: $dark-second-text-color;
-          border-color: $dark-lowest-text-color;
+          color: var(--dark-second-text-color);
+          border-color: var(--dark-lowest-text-color);
           .nut-textarea__textarea {
             color: white;
           }
         }
 
         .light-mode & {
-          color: $light-second-text-color;
-          border-color: $light-divider-color;
+          color: var(--light-second-text-color);
+          border-color: var(--light-divider-color);
         }
       }
     }

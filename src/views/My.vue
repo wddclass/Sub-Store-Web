@@ -7,7 +7,6 @@
             :class="{ 'avatar-normal': !githubUser }"
             size="72"
             :icon="displayAvatar"
-            @click="showVConsole"
           />
           <div class="name">
             <p class="title">
@@ -24,8 +23,8 @@
         <div class="actions">
           <nut-button
             class="upload-btn"
-            type="info"
             plain
+            type="primary"
             :disabled="syncIsDisabled"
             size="small"
             :loading="uploadIsLoading"
@@ -49,12 +48,45 @@
               v-if="!downloadIsLoading"
               icon="fa-solid fa-cloud-arrow-down"
             />
-            {{ $t(`myPage.btn.sync`) }}</nut-button
+            {{ $t(`myPage.btn.download`) }}</nut-button
           >
         </div>
       </div>
       <div class="config-card">
-        <h1>{{ $t(`myPage.config`) }}</h1>
+        <div class="title-wrapper">
+          <h1>{{ $t(`myPage.config`) }}</h1>
+          <div class="config-btn-wrapper">
+            <nut-button
+              v-if="isEditing"
+              class="cancel-btn"
+              plain
+              type="info"
+              size="mini"
+              @click="exitEditMode"
+              :disabled="isEditLoading"
+            >
+              <font-awesome-icon icon="fa-solid fa-ban" />
+              {{ $t(`myPage.btn.cancel`) }}
+            </nut-button>
+            <nut-button
+              class="save-btn"
+              type="primary"
+              size="mini"
+              @click="toggleEditMode"
+              :loading="isEditLoading"
+            >
+              <font-awesome-icon
+                v-if="!isEditing"
+                icon="fa-solid fa-pen-to-square"
+              />
+              <font-awesome-icon
+                v-else-if="!isEditLoading && isEditing"
+                icon="fa-solid fa-floppy-disk"
+              />
+              {{ !isEditing ? $t(`myPage.btn.edit`) : $t(`myPage.btn.save`) }}
+            </nut-button>
+          </div>
+        </div>
         <div class="config-input-wrapper">
           <nut-input
             class="input"
@@ -75,42 +107,21 @@
             :left-icon="iconKey"
           />
         </div>
-        <div class="config-btn-wrapper">
-          <nut-button
-            v-if="isEditing"
-            class="cancel-btn"
-            plain
-            type="info"
-            size="mini"
-            @click="exitEditMode"
-            :disabled="isEditLoading"
-          >
-            <font-awesome-icon icon="fa-solid fa-ban" />
-            {{ $t(`myPage.btn.cancel`) }}
-          </nut-button>
-          <nut-button
-            class="save-btn"
-            type="primary"
-            size="mini"
-            @click="toggleEditMode"
-            :loading="isEditLoading"
-          >
-            <font-awesome-icon
-              v-if="!isEditing"
-              icon="fa-solid fa-pen-to-square"
-            />
-            <font-awesome-icon
-              v-else-if="!isEditLoading && isEditing"
-              icon="fa-solid fa-floppy-disk"
-            />
-            {{ !isEditing ? $t(`myPage.btn.edit`) : $t(`myPage.btn.save`) }}
-          </nut-button>
-        </div>
       </div>
-      <nut-cell-group title="设置">
-        <nut-cell title="设置API" to="/setApi"></nut-cell>
-      </nut-cell-group>
+      <nut-cell
+        class="change-theme"
+        :title="$t(`navBar.pagesTitle.setApi`)"
+        to="/setApi"
+        is-link
+      ></nut-cell>
+      <nut-cell
+        class="change-theme"
+        :title="$t(`themeSettingPage.themeSettingTitle`)"
+        to="/settings/theme"
+        is-link
+      ></nut-cell>
     </div>
+
     <div class="env-block">
       <img
         v-if="backendIcon()"
@@ -125,33 +136,34 @@
 </template>
 
 <script lang="ts" setup>
-  import iconKey from '@/assets/icons/key-solid.svg?url';
-  import iconUser from '@/assets/icons/user-solid.svg?url';
-
-  import surge from '@/assets/icons/surge.png?url';
-  import clash from '@/assets/icons/clash.png?url';
-  import quanx from '@/assets/icons/quanx.png?url';
-  import loon from '@/assets/icons/loon.png?url';
-  import stash from '@/assets/icons/stash.png?url';
-  import node from '@/assets/icons/node.svg?url';
+  import { useSettingsApi } from '@/api/settings';
   import avatar from '@/assets/icons/avatar.svg?url';
-  import dayjs from 'dayjs';
-  import { ref, computed, watchEffect } from 'vue';
+  import clash from '@/assets/icons/clash.png?url';
+  import iconKey from '@/assets/icons/key-solid.svg';
+  import loon from '@/assets/icons/loon.png?url';
+  import node from '@/assets/icons/node.svg?url';
+  import quanx from '@/assets/icons/quanx.png?url';
+  import stash from '@/assets/icons/stash.png?url';
+  import surge from '@/assets/icons/surge.png?url';
+  import iconUser from '@/assets/icons/user-solid.svg';
+  import { useAppNotifyStore } from '@/store/appNotify';
   import { useGlobalStore } from '@/store/global';
   import { useSettingsStore } from '@/store/settings';
-  import { storeToRefs } from 'pinia';
-  import { useI18n } from 'vue-i18n';
-  import { useSettingsApi } from '@/api/settings';
-  import { Notify } from '@nutui/nutui';
+  import { butifyDate } from '@/utils/butifyDate';
   import { initStores } from '@/utils/initApp';
+  import { storeToRefs } from 'pinia';
+  import { computed, ref, watchEffect } from 'vue';
+  import { useI18n } from 'vue-i18n';
+  import { useRouter } from 'vue-router';
 
   const { t } = useI18n();
+  const router = useRouter();
+  const { showNotify } = useAppNotifyStore();
   const settingsStore = useSettingsStore();
   const globalStore = useGlobalStore();
   const { env } = storeToRefs(globalStore);
   const { githubUser, gistToken, syncTime, avatarUrl } =
     storeToRefs(settingsStore);
-  const showVConsoleTimes = ref(0);
 
   const displayAvatar = computed(() => {
     return !githubUser.value ? avatar : avatarUrl.value;
@@ -226,11 +238,8 @@
     if (!gistToken.value || !githubUser.value) {
       return [t(`myPage.placeholder.des`), ''];
     } else {
-      if (!syncTime.value) return [t(`myPage.placeholder.haveNotSync`), ''];
-      return [
-        t(`myPage.placeholder.syncTime`),
-        dayjs(syncTime.value).format('YYYY-MM-DD HH:mm:ss'),
-      ];
+      if (!syncTime.value) return [t(`myPage.placeholder.haveNotDownload`), ''];
+      return [t(`myPage.placeholder.uploadTime`), butifyDate(syncTime.value)];
     }
   });
 
@@ -246,10 +255,20 @@
 
     const res = await useSettingsApi().syncSettings(query);
 
-    if (query === 'download' && res?.data?.status === 'success') {
-      await initStores(true, true);
+    if (res.data.status === 'success') {
+      switch (query) {
+        case 'download':
+          await initStores(false, true, true);
+          break;
+        case 'upload':
+          await useSettingsStore().fetchSettings();
+          break;
+      }
+      showNotify({
+        type: 'success',
+        title: t(`myPage.notify.${query}.succeed`),
+      });
     }
-    if (res) Notify.success(t(`myPage.notify.${query}.succeed`));
 
     downloadIsLoading.value = false;
     uploadIsLoading.value = false;
@@ -262,25 +281,13 @@
       setDisplayInfo();
       isInit.value = true;
     }
-    if (githubUser.value) {
-      setDisplayInfo();
-    }
   });
-
-  const showVConsole = () => {
-    showVConsoleTimes.value += 1;
-    if (showVConsoleTimes.value >= 10) {
-      window.initvConsole.showSwitch();
-    }
-  };
 </script>
 
 <style lang="scss" scoped>
-  @import '@/assets/custom_theme_variables.scss';
-
   .my-page-wrapper {
     height: 100%;
-    padding: $safe-area-side;
+    padding: var(--safe-area-side);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -293,16 +300,14 @@
         margin-top: 20px;
         width: 100%;
         padding: 12px;
-        border-radius: $item-card-radios;
+        border-radius: var(--item-card-radios);
+        color: var(--second-text-color);
+        background: var(--card-color);
 
-        .dark-mode & {
-          color: $dark-comment-text-color;
-          background: $dark-card-color;
-        }
-
-        .light-mode & {
-          color: $light-comment-text-color;
-          background: $light-card-color;
+        .title-wrapper {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
         }
 
         h1 {
@@ -316,52 +321,30 @@
 
           .input.nut-input-disabled {
             :deep(input):disabled {
-              .dark-mode & {
-                -webkit-text-fill-color: $dark-lowest-text-color;
-              }
-              .light-mode & {
-                -webkit-text-fill-color: $light-lowest-text-color;
-              }
+              -webkit-text-fill-color: var(--lowest-text-color);
             }
           }
 
           .input {
             background: transparent;
             padding: 16px;
+            color: var(--second-text-color);
 
             :deep(img) {
               width: 16px;
               height: 16px;
               margin-right: 6px;
               opacity: 0.2;
-
-              .dark-mode & {
-                filter: brightness(1000%);
-              }
-
-              .light-mode & {
-                filter: brightness(0);
-              }
+              filter: brightness(var(--img-brightness));
             }
 
             &:not(:first-child) {
               margin-top: 8px;
             }
-
-            .dark-mode & {
-              color: $dark-second-text-color;
-              border-color: $dark-lowest-text-color;
-            }
-
-            .light-mode & {
-              color: $light-second-text-color;
-              border-color: $light-divider-color;
-            }
           }
         }
 
         .config-btn-wrapper {
-          margin-top: 20px;
           display: flex;
           justify-content: flex-end;
 
@@ -385,6 +368,7 @@
         .avatar-wrapper {
           display: flex;
           align-items: center;
+          max-width: 64%;
 
           .avatar-normal {
             :deep(img) {
@@ -396,9 +380,16 @@
             margin-left: 12px;
             font-size: 18px;
             font-weight: bold;
+            max-width: 64%;
             display: flex;
             flex-direction: column;
-            max-width: 64%;
+
+            p.title {
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              color: var(--primary-text-color);
+            }
 
             .des {
               margin-top: 6px;
@@ -406,14 +397,7 @@
               font-weight: normal;
               display: flex;
               flex-direction: column;
-
-              .dark-mode & {
-                color: $dark-comment-text-color;
-              }
-
-              .light-mode & {
-                color: $light-comment-text-color;
-              }
+              color: var(--comment-text-color);
             }
           }
         }
@@ -430,7 +414,7 @@
           .upload-btn,
           .download-btn {
             padding: 0 12px;
-            width: 104px;
+            width: 118px;
           }
 
           .upload-btn {
@@ -442,6 +426,11 @@
           }
         }
       }
+
+      .change-theme {
+        box-shadow: none;
+        font-weight: bold;
+      }
     }
 
     .env-block {
@@ -450,32 +439,13 @@
       justify-content: center;
       align-items: center;
       font-size: 12px;
-
-      .dark-mode & {
-        color: $dark-lowest-text-color;
-      }
-
-      .light-mode & {
-        color: $light-lowest-text-color;
-      }
+      color: var(--lowest-text-color);
 
       img {
         opacity: 0.4;
         width: 64px;
         height: 64px;
       }
-    }
-  }
-  .nut-cell {
-    border-radius: 10px !important;
-    .dark-mode & {
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
-    }
-
-    .light-mode & {
-      background: rgba(255, 255, 255, 0.1);
-      color: rgba(0, 0, 0, 0.8);
     }
   }
 </style>

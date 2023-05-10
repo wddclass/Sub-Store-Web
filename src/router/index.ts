@@ -1,15 +1,24 @@
+import { useEnvApi } from '@/api/env';
+import { useSubsApi } from '@/api/subs';
+
+import AppLayout from '@/layout/AppLayout.vue';
+import { useGlobalStore } from '@/store/global';
+import { initStores } from '@/utils/initApp';
+import My from '@/views/My.vue';
+import NotFound from '@/views/NotFound.vue';
+
+import Sub from '@/views/Sub.vue';
+import SubEditor from '@/views/SubEditor.vue';
+
+import SetApi from '@/views/SetApi.vue';
+import Sync from '@/views/Sync.vue';
+import themeSetting from '@/views/themeSetting.vue';
+import { Toast } from '@nutui/nutui';
+import { toRaw } from 'vue';
 import 'vue-router';
 import { createRouter, createWebHistory } from 'vue-router';
 
-import AppLayout from '@/layout/AppLayout.vue';
-
-import Sub from '@/views/Sub.vue';
-import Sync from '@/views/Sync.vue';
-import My from '@/views/My.vue';
-import SubEditor from '@/views/SubEditor.vue';
-import SetApi from '@/views/SetApi.vue';
-import NotFound from '@/views/NotFound.vue';
-import { useSubsApi } from '@/api/subs';
+let globalStore = null;
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -64,6 +73,15 @@ const router = createRouter({
             needNavBack: true,
           },
         },
+        {
+          path: '/settings/theme',
+          component: themeSetting,
+          meta: {
+            title: 'themeSetting',
+            needTabBar: false,
+            needNavBack: true,
+          },
+        },
       ],
     },
     {
@@ -98,6 +116,30 @@ const router = createRouter({
 
 // 全局前置守卫
 router.beforeResolve(async to => {
+  // 路由跳转时查询环境，决定是否更新数据
+  if (globalStore !== null) {
+    useEnvApi()
+      .getEnv()
+      .then(async res => {
+        const envNow = res;
+        const storeEnv = toRaw(globalStore.env);
+        if (envNow.data.status === 'success') {
+          const backend = envNow.data.data.backend;
+          const version = envNow.data.data.version;
+          if (backend !== storeEnv.backend || version !== storeEnv.version) {
+            Toast.loading('检测到后端变化，更新数据中...', {
+              cover: true,
+              id: 'fetchLoading',
+            });
+            await initStores(false, true, true);
+            Toast.hide('fetchLoading');
+          }
+        }
+      });
+  } else {
+    globalStore = useGlobalStore();
+  }
+
   // 进入编辑页面前查询是否存在订阅
   if (to.fullPath.startsWith('/edit/')) {
     const name = to.params.id as string;

@@ -84,7 +84,7 @@
       :ok-text="$t(`editorPage.subConfig.actions.addAction.confirm`)"
       @confirm="confirm"
     ></nut-picker>
-    <button class="add-action-btn" @click="showAddPicker = true">
+    <button class="add-action-btn" @click="onClickAddBtn">
       <span
         ><font-awesome-icon icon="fa-icon fa-plus" />{{
           $t(`editorPage.subConfig.actions.addAction.title`)
@@ -95,11 +95,12 @@
 </template>
 
 <script lang="ts" setup>
-  import Draggable from 'vuedraggable';
-  import { ref } from 'vue';
-  import { Dialog } from '@nutui/nutui';
-  import { useI18n } from 'vue-i18n';
+  import { useMousePicker } from '@/hooks/useMousePicker';
   import i18nFile from '@/locales/zh';
+  import { Dialog } from '@nutui/nutui';
+  import { ref } from 'vue';
+  import { useI18n } from 'vue-i18n';
+  import Draggable from 'vuedraggable';
 
   const { t } = useI18n();
   const drag = ref(true);
@@ -114,6 +115,11 @@
     };
   });
   const columns = ref(items);
+  useMousePicker();
+
+  const onClickAddBtn = () => {
+    showAddPicker.value = true;
+  };
 
   // 列表渲染的数据
   // 预览开关数组，数组第一项为 id，对应 list 中的同 id 项目，控制该 id 开启关闭预览
@@ -189,15 +195,13 @@
 </script>
 
 <style lang="scss" scoped>
-  @import '@/assets/custom_theme_variables.scss';
-
   .add-action-btn {
     font-size: 14px;
     width: 100%;
     height: 44px;
-    border-radius: $item-card-radios;
-    color: $primary-color;
-    border: 1px dashed $primary-color;
+    border-radius: var(--item-card-radios);
+    color: var(--primary-color);
+    border: 1px dashed var(--primary-color);
     background: none;
     display: flex;
     align-items: center;
@@ -221,25 +225,17 @@
   }
 
   .list-group-item {
-    background: $light-card-color;
-    border-radius: $item-card-radios;
     display: flex;
     flex-direction: column;
     box-shadow: none;
-
-    .dark-mode & {
-      background: $dark-card-color;
-    }
-
-    .light-mode & {
-      background: $light-card-color;
-    }
 
     .list-group-item-title {
       display: flex;
       justify-content: space-between;
       padding-bottom: 12px;
       margin-bottom: 12px;
+      color: var(--comment-text-color);
+      border-bottom: 1px solid var(--divider-color);
 
       .left {
         font-size: 12px;
@@ -249,22 +245,8 @@
         }
 
         svg {
-          .dark-mode & {
-            color: $dark-unimportant-icon-color;
-          }
-          .light-mode & {
-            color: $light-unimportant-icon-color;
-          }
+          color: var(--unimportant-icon-color);
         }
-      }
-
-      .light-mode & {
-        color: $light-second-text-color;
-        border-bottom: 1px solid $light-divider-color;
-      }
-      .dark-mode & {
-        color: $dark-comment-text-color;
-        border-bottom: 1px solid $dark-divider-color;
       }
 
       .right {
@@ -281,15 +263,6 @@
             font-size: 12px;
           }
 
-          .my-switch.switch-close {
-            .light-mode & {
-              background: $light-switch-background-color;
-            }
-            .dark-mode & {
-              background: $dark-switch-background-color;
-            }
-          }
-
           .my-switch {
             height: 22px;
             width: 40px;
@@ -304,19 +277,12 @@
 
         .delete {
           padding: 0 24px;
-          color: #e56459;
+          color: var(--danger-color);
         }
 
         .drag-handler {
           padding-left: 16px;
-
-          .dark-mode & {
-            color: $dark-lowest-text-color;
-          }
-
-          .light-mode & {
-            color: $light-lowest-text-color;
-          }
+          color: var(--lowest-text-color);
         }
       }
     }
@@ -332,16 +298,10 @@
       font-weight: normal;
       font-size: 12px;
       padding: 0;
+      color: var(--comment-text-color);
 
       svg {
         margin-right: 4px;
-      }
-
-      .light-mode & {
-        color: $light-comment-text-color;
-      }
-      .dark-mode & {
-        color: $dark-comment-text-color;
       }
     }
   }
@@ -365,7 +325,7 @@
 
   /*选中样式*/
   .chosen {
-    border: solid 1px $primary-color !important;
+    border: solid 1px var(--primary-color) !important;
     opacity: 0.92 !important;
   }
 

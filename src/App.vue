@@ -1,4 +1,5 @@
 <template>
+  <GlobalNotify />
   <NavBar />
   <main class="page-body">
     <router-view />
@@ -6,20 +7,27 @@
 </template>
 
 <script setup lang="ts">
+  import GlobalNotify from '@/components/GlobalNotify.vue';
   import NavBar from '@/components/NavBar.vue';
-  import { setColorThemeClass } from '@/utils/setColorThemeClass';
-  import { onMounted } from 'vue';
-  import { useSubsStore } from '@/store/subs';
+  import { useThemes } from '@/hooks/useThemes';
   import { useGlobalStore } from '@/store/global';
-  import { useI18n } from 'vue-i18n';
+  import { useSubsStore } from '@/store/subs';
+  import { getFlowsUrlList } from '@/utils/getFlowsUrlList';
   import { initStores } from '@/utils/initApp';
-  import { useRouter } from 'vue-router';
+  import { storeToRefs } from 'pinia';
+  import { onMounted, ref, watchEffect } from 'vue';
+  import { useI18n } from 'vue-i18n';
+  import { useRouter, useRoute } from 'vue-router';
 
   const { t } = useI18n();
 
   const subsStore = useSubsStore();
   const globalStore = useGlobalStore();
+  const route = useRoute();
   const router = useRouter();
+
+  const { subs, flows } = storeToRefs(subsStore);
+  const allLength = ref(null);
 
   // 处于 pwa 时将底部安全距离写入 global store
   type NavigatorExtend = Navigator & {
@@ -28,35 +36,39 @@
   const navigator: NavigatorExtend = window.navigator;
   globalStore.setBottomSafeArea(navigator.standalone ? 32 : 6);
 
-  // 初始化颜色主题
-  setColorThemeClass();
-
   // 引入 inoBounce 禁止过度滑动橡皮筋效果
   onMounted(() => {
     let externalScript = document.createElement('script');
     externalScript.src =
       'https://cdnjs.cloudflare.com/ajax/libs/inobounce/0.2.1/inobounce.min.js';
     document.head.appendChild(externalScript);
-    if (!window.localStorage.getItem('api')) {
-      router.push(`/setApi`);
+
+    // 初始化颜色主题
+    useThemes();
+    if (!getUrlParams('api') && !localStorage.getItem('api')) {
+      router.push('/setApi');
+      return;
     }
+
+    // 初始化应用数据（顶部通知）
+    initStores(true, true, false);
+
+    // 设置流量刷新状态
+    watchEffect(() => {
+      allLength.value = getFlowsUrlList(subs.value).length;
+      const currentLength = Object.keys(flows.value).length;
+      globalStore.setFlowFetching(allLength.value !== currentLength);
+    });
   });
 
-  onCreated(()=>{
-    if (sessionStorage.redirect) {
-            const redirect = sessionStorage.redirect
-            delete sessionStorage.redirect
-            router.push(redirect)
-        }
-  })
-
-  // 初始化应用数据（顶部通知）
-  initStores(true, true);
+  const getUrlParams = value => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    return urlParams.get(value);
+  };
 </script>
 
 <style lang="scss">
-  @import '@/assets/custom_theme_variables.scss';
-
   #app {
     font-family: 'Roboto', 'Noto Sans', Arial, 'PingFang SC',
       'Source Han Sans SC', 'Source Han Sans CN', 'Microsoft YaHei', 'ST Heiti',
@@ -66,16 +78,7 @@
     position: absolute;
     height: 100%;
     width: 100%;
-
-    .light-mode & {
-      color: $light-primary-text-color;
-      background: $light-background-color;
-    }
-
-    .dark-mode & {
-      color: $dark-primary-text-color;
-      background: $dark-background-color;
-    }
+    background: var(--background-color);
 
     .page-body {
       flex: 1;

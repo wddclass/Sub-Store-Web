@@ -23,22 +23,21 @@
 </template>
 
 <script lang="ts" setup>
-  import surge from '@/assets/icons/surge.png?url';
-  import clash from '@/assets/icons/clash.png?url';
-  import quanx from '@/assets/icons/quanx.png?url';
-  import loon from '@/assets/icons/loon.png?url';
-  import stash from '@/assets/icons/stash.png?url';
-  import shadowrocket from '@/assets/icons/shadowrocket.png?url';
+  import surge from '@/assets/icons/surge.png';
+  import clash from '@/assets/icons/clash.png';
+  import quanx from '@/assets/icons/quanx.png';
+  import loon from '@/assets/icons/loon.png';
+  import stash from '@/assets/icons/stash.png';
+  import shadowrocket from '@/assets/icons/shadowrocket.png';
   import { Notify } from '@nutui/nutui';
   import useClipboard from 'vue-clipboard3';
 
   const { toClipboard } = useClipboard();
-
   const { name, type } = defineProps<{
     name: string;
     type: 'sub' | 'collection';
   }>();
-  const host = window.localStorage.getItem('api');
+  const host = import.meta.env.VITE_API_URL;
   const platformList = [
     {
       name: 'Clash',
@@ -60,7 +59,6 @@
       path: 'Loon',
       icon: loon,
     },
-
     {
       name: 'Stash',
       path: 'Stash',
@@ -72,7 +70,6 @@
       icon: shadowrocket,
     },
   ];
-
   const copyLink = async path => {
     const url = `${host}/download/${
       type === 'sub' ? '' : 'collection/'
@@ -85,8 +82,6 @@
 </script>
 
 <style lang="scss" scoped>
-  @import '@/assets/custom_theme_variables.scss';
-
   .preview-list {
     margin: 0;
     padding: 0;
@@ -102,12 +97,9 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      .dark-mode &:not(:last-child) {
-        border-bottom: 1px solid $dark-divider-color;
-      }
 
-      .light-mode &:not(:last-child) {
-        border-bottom: 1px solid $light-divider-color;
+      &:not(:last-child) {
+        border-bottom: 1px solid var(--divider-color);
       }
 
       a {
@@ -119,24 +111,14 @@
         div {
           width: 40px;
           height: 40px;
-          margin-right: 6px;
+          margin-right: 16px;
         }
 
         p {
-          font-size: 16px;
-
-          .dark & {
-            color: $dark-primary-text-color;
-          }
-
-          .light & {
-            color: $light-primary-text-color;
-          }
+          font-size: 14px;
+          color: var(--comment-text-color);
         }
       }
     }
-  }
-  .nut-button--small {
-    line-height: 32px;
   }
 </style>

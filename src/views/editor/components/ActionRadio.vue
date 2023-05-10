@@ -28,7 +28,7 @@
   // 此处 key 需要与 i18n 的 actions 中的 key 相同
   // 值的次序需要与该选项的 options 值 顺序相同
   const opt = {
-    'Flag Operator': [0, 1],
+    'Flag Operator': ['add', 'remove'],
     'Sort Operator': ['asc', 'desc', 'random'],
     'Resolve Domain Operator': ['Google', 'IP-API', 'Cloudflare'],
   };
@@ -41,7 +41,7 @@
     if (item) {
       switch (type) {
         case 'Flag Operator':
-          value.value = item.args ? 0 : 1;
+          value.value = item.args?.mode ?? 'add';
           break;
         case 'Sort Operator':
           value.value = item.args ?? 'asc';
@@ -58,7 +58,9 @@
     const item = form.process.find(item => item.id === id);
     switch (type) {
       case 'Flag Operator':
-        item.args = !value.value;
+        item.args = {
+          mode: value.value,
+        };
         break;
       case 'Sort Operator':
         item.args = value.value;
@@ -73,19 +75,10 @@
 </script>
 
 <style lang="scss" scoped>
-  @import '@/assets/custom_theme_variables.scss';
-
   .des-label {
     font-size: 12px;
     margin-bottom: 8px;
-
-    .dark-mode & {
-      color: $dark-comment-text-color;
-    }
-
-    .light-mode & {
-      color: $light-comment-text-color;
-    }
+    color: var(--comment-text-color);
   }
 
   .nut-radiogroup {

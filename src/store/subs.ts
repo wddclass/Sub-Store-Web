@@ -1,10 +1,13 @@
-import { defineStore } from 'pinia';
 import { useSubsApi } from '@/api/subs';
+import i18n from '@/locales';
+import { useAppNotifyStore } from '@/store/appNotify';
+import { getFlowsUrlList } from '@/utils/getFlowsUrlList';
+import { defineStore } from 'pinia';
 
+const { t } = i18n.global;
 const subsApi = useSubsApi();
 
 export const useSubsStore = defineStore('subsStore', {
-  persist: true,
   state: (): SubsStoreState => {
     return {
       subs: [],
@@ -47,46 +50,13 @@ export const useSubsStore = defineStore('subsStore', {
         this[type][index] = res.data.data;
       }
     },
-    async fetchFlows() {
-      const flowNameHash = {};
-      const nameList = [];
-
-      // 提取所有的 remote 的 url，储存为 hash 表
-      this.subs.forEach(sub => {
-        sub.loading = true;
-        if (sub.source === 'remote') {
-          flowNameHash[sub.url]
-            ? flowNameHash[sub.url].push(sub.name)
-            : (flowNameHash[sub.url] = [sub.name]);
-        }
-      });
-      // 取出每个 hash 表里每个 url 的第一个 name
-      for (const url in flowNameHash) {
-        nameList.push([url, flowNameHash[url][0]]);
-      }
-
-      // 用该 name 请求流量信息 并按 url 存入 store 中
-      // for (let i = 0; i < nameList.length; i++) {
-      //   const [url, name] = nameList[i];
-      //   subsApi.getFlow(name).then(data => {
-      //     this.subs.find(item => item.name == name).loading = false;
-      //     this.flows[url] = data;
-      //   });
-      //   // const { data } = await subsApi.getFlow(name);
-      //   // this.subs.find(item => item.name == name).loading = false;
-      //   // this.flows[url] = data;
-      // }
-      // 优化异步请求流量信息
-      await Promise.all(
-        nameList.map(async item => {
-          const [url, name] = item;
-          const { data } = await subsApi.getFlow(name);
-          this.subs
-            .filter(item => item.url == url)
-            .map(item => (item.loading = false));
-          this.flows[url] = data;
-        })
-      );
+    async fetchFlows(sub?: Sub[]) {
+      const asyncGetFlow = async ([url, name]) => {
+        const { data } = await subsApi.getFlow(name);
+        this.flows[url] = data;
+      };
+      const subs = sub || this.subs;
+      getFlowsUrlList(subs).forEach(asyncGetFlow);
     },
     async fetchSingleFlow(url: string, name: string) {
       this.subs
@@ -99,9 +69,15 @@ export const useSubsStore = defineStore('subsStore', {
       this.flows[url] = data;
     },
     async deleteSub(type: SubsType, name: string) {
+      const { showNotify } = useAppNotifyStore();
+
       const { data } = await subsApi.deleteSub(type, name);
       if (data.status === 'success') {
         await this.fetchSubsData();
+        showNotify({
+          type: 'danger',
+          title: t('subPage.deleteSub.succeedNotify'),
+        });
       }
     },
   },

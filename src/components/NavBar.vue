@@ -6,6 +6,8 @@
         @on-click-back="back"
         @on-click-right="showLangSwitchPopup = true"
         :title="currentTitle"
+        :tit-icon="currentTitleWhetherAsk"
+        @on-click-icon="onClickNavbarIcon"
       >
         <template #right>
           <font-awesome-icon
@@ -45,78 +47,103 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, computed } from 'vue'
-  import { useI18n } from 'vue-i18n'
-  import { useRoute, useRouter } from 'vue-router'
+  import { computed, ref } from 'vue';
+  import { useI18n } from 'vue-i18n';
+  import { useRoute, useRouter } from 'vue-router';
+  import { Toast } from '@nutui/nutui';
 
-  const { t, locale } = useI18n()
-  const router = useRouter()
-  const route = useRoute()
-  const showLangSwitchPopup = ref(false)
-  const langList = ['zh', 'en']
+  const { t, locale } = useI18n();
+  const router = useRouter();
+  const route = useRoute();
+  const showLangSwitchPopup = ref(false);
+  const langList = ['zh', 'en'];
 
   const isNeedBack = computed(() => {
-    return route.meta.needNavBack ?? false
-  })
+    return route.meta.needNavBack ?? false;
+  });
 
   const currentTitle = computed(() => {
-    const metaTitle = route.meta.title
-    return metaTitle ? t(`navBar.pagesTitle.${metaTitle}`) : undefined
-  })
+    const metaTitle = route.meta.title;
+    return metaTitle ? t(`navBar.pagesTitle.${metaTitle}`) : undefined;
+  });
+  const currentTitleWhetherAsk = computed(() => {
+    const ownAsk = ['sync'];
+    const metaTitle = route.meta.title;
+    return ownAsk.includes(metaTitle) ? 'ask' : '';
+  });
+  const onClickNavbarIcon = () => {
+    const metaTitle = route.meta.title;
+    const toastContent =
+      t(`navBar.pagesTitle.askWhat.${metaTitle}.content`) || '';
+    const toastTitle = t(`navBar.pagesTitle.askWhat.${metaTitle}.title`) || '';
+    Toast.text(toastContent, {
+      title: toastTitle,
+      duration: 0,
+      cover: true,
+      'close-on-click-overlay': true,
+      'bg-color': 'rgba(0, 0, 0, 0.8)',
+      'cover-color': 'rgba(0, 0, 0, 0.2)',
+      'text-align-center': false,
+    });
+  };
 
-  const navBarHeight = '56px'
+  const navBarHeight = '56px';
   const changeLang = (type: string) => {
-    locale.value = type
-    localStorage.setItem('locale', type)
-    showLangSwitchPopup.value = false
-  }
+    locale.value = type;
+    localStorage.setItem('locale', type);
+    showLangSwitchPopup.value = false;
+  };
 
   const back = () => {
     if (isNeedBack.value) {
-      console.log('Click Back')
-      router.back()
+      router.back();
     }
-  }
+  };
 </script>
 
 <style lang="scss">
-  @import '@/assets/custom_theme_variables.scss';
-
   .nav-bar-wrapper {
     position: fixed;
     width: 100%;
     top: 0;
     height: v-bind(navBarHeight);
     z-index: 20;
-    max-width: var(--main-max-width);
 
     nav {
       .nut-navbar {
         height: v-bind(navBarHeight);
         top: 0;
         box-shadow: none;
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
+        backdrop-filter: blur(var(--nav-bar-blur));
+        -webkit-backdrop-filter: blur(var(--nav-bar-blur));
+        background: var(--nav-bar-color);
+        border-bottom: var(--divider-color) solid 1px;
 
-        .dark-mode & {
-          background: $dark-nav-bar-color;
-          border-bottom: $dark-divider-color solid 1px;
-
-          .nut-navbar__title > .title {
-            color: $dark-primary-text-color;
+        .nut-navbar__title {
+          min-width: 53%;
+          margin: 0 auto;
+          text-align: center;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          .title {
+            min-width: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 100%;
+            color: var(--primary-text-color);
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 1;
+            overflow: hidden;
           }
-        }
-        .light-mode & {
-          background: $light-nav-bar-color;
-          border-bottom: $light-divider-color solid 1px;
-
-          .nut-navbar__title > .title {
-            color: $light-primary-text-color;
+          .nutui-iconfont {
+            margin-left: 5px;
           }
         }
 
         .navBar-right-icon {
-          color: #606266;
+          color: var(--icon-nav-bar-right);
         }
       }
     }
@@ -125,55 +152,29 @@
   .nav-bar-lang-switch-popup > .nut-cell-group {
     width: 100%;
 
-    .dark-mode & {
-      background-color: $dark-popup-color;
-      > .nut-cell-group__title {
-        color: $dark-comment-text-color;
-      }
-
-      > .nut-cell-group__warp {
-        background-color: $dark-popup-color;
-
-        > .nut-cell {
-          background-color: $dark-popup-color;
-
-          &::after {
-            border-color: $dark-divider-color;
-          }
-        }
-
-        > .nut-cell:not(.selected) {
-          color: $dark-primary-text-color;
-        }
-      }
+    background-color: var(--popup-color);
+    > .nut-cell-group__title {
+      color: var(--comment-text-color);
     }
 
-    .light-mode & {
-      background-color: $light-popup-color;
+    > .nut-cell-group__warp {
+      background-color: var(--popup-color);
 
-      > .nut-cell-group__title {
-        color: $light-comment-text-color;
+      > .nut-cell {
+        background-color: var(--popup-color);
+
+        &::after {
+          border-color: var(--divider-color);
+        }
       }
 
-      > .nut-cell-group__warp {
-        background-color: $light-popup-color;
-
-        > .nut-cell {
-          background-color: $light-popup-color;
-
-          &::after {
-            border-color: $light-divider-color;
-          }
-        }
-
-        > .nut-cell:not(.selected) {
-          color: $light-primary-text-color;
-        }
+      > .nut-cell:not(.selected) {
+        color: var(--primary-text-color);
       }
     }
 
     .selected.nut-cell {
-      color: $primary-color;
+      color: var(--primary-color);
       font-weight: bold;
       display: flex;
       align-items: center;

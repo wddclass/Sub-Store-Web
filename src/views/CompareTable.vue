@@ -5,6 +5,11 @@
         <h1>
           <font-awesome-icon icon="fa-solid fa-eye" />
           {{ $t(`comparePage.title`) }}
+          <span
+            ><font-awesome-icon icon="fa-solid fa-angles-right" />{{
+              displayName
+            }}</span
+          >
         </h1>
         <button @click="clickClose">
           <font-awesome-icon icon="fa-solid fa-circle-xmark" />
@@ -44,6 +49,7 @@
               <tr
                 v-if="isProcessedVisible"
                 class="compare-table-row processed-tr"
+                @click="openNodeInfoPanel(processed)"
               >
                 <td class="processed-item">
                   <div class="name-wrapper">
@@ -91,6 +97,7 @@
               <tr
                 v-if="isOriginalVisible"
                 class="compare-table-row original-tr"
+                @click="openNodeInfoPanel(original)"
               >
                 <td class="original-item">
                   <div class="name-wrapper">
@@ -165,7 +172,10 @@
           <!--表格内容-->
           <table class="compare-table-body">
             <template v-for="node in originalData" :key="node.id">
-              <tr class="compare-table-row original-tr">
+              <tr
+                class="compare-table-row original-tr"
+                @click="openNodeInfoPanel(node)"
+              >
                 <td class="original-item">
                   <div class="name-wrapper">
                     <div>
@@ -214,14 +224,29 @@
         </div>
       </div>
     </div>
+
+    <NodeInfoPanel
+      :ipApi="ipApi"
+      :nodeInfo="nodeInfo"
+      v-if="nodeInfoIsVisible"
+      @close="closeNodeInfoPanel"
+    />
   </Teleport>
 </template>
 
 <script lang="ts" setup>
-  import { computed, ref } from 'vue';
+  import { useSubsApi } from '@/api/subs';
+  import NodeInfoPanel from '@/components/NodeInfoPanel.vue';
+  import { useSubsStore } from '@/store/subs';
+  import { Toast } from '@nutui/nutui';
+  import { computed, ref, toRaw } from 'vue';
+  import { useI18n } from 'vue-i18n';
 
-  const { compareData } = defineProps<{
+  const { t } = useI18n();
+  const subsStore = useSubsStore();
+  const { compareData, name } = defineProps<{
     compareData: any;
+    name: string;
   }>();
 
   const titleList = ['name', 'udp', 'tfo', 'skip-cert-verify', 'aead'];
@@ -230,6 +255,15 @@
 
   const isOriginalVisible = ref(true);
   const isProcessedVisible = ref(true);
+
+  const nodeInfoIsVisible = ref(false);
+  const ipApi = ref<IpApiData>(null);
+  const nodeInfo = ref<NodeInfo>(null);
+
+  const displayName = computed(() => {
+    const sub = subsStore.getOneSub(name) || subsStore.getOneCollection(name);
+    return sub?.displayName || sub?.['display-name'] || name;
+  });
 
   const toggleProcessedVisible = () => {
     if (isProcessedVisible.value && !isOriginalVisible.value) {
@@ -272,43 +306,47 @@
   const clickClose = () => {
     emit('closeCompare');
   };
+
+  const closeNodeInfoPanel = () => {
+    nodeInfoIsVisible.value = false;
+  };
+
+  const openNodeInfoPanel = async val => {
+    Toast.loading(t('comparePage.nodeInfo.loading'), {
+      cover: true,
+      id: 'nodeInfoLoading',
+    });
+    const nodeData = toRaw(val);
+    const res = await useSubsApi().getSubInfo(nodeData);
+    if (res.data.status === 'success') {
+      ipApi.value = res.data.data;
+      nodeInfo.value = nodeData;
+      nodeInfoIsVisible.value = true;
+    } else {
+      Toast.fail(t('comparePage.nodeInfo.loadFailed'));
+    }
+    Toast.hide('nodeInfoLoading');
+  };
 </script>
 
 <style lang="scss" scoped>
-  @import '@/assets/custom_theme_variables.scss';
-
   .type-tag {
     padding: 1px 4px;
     line-height: 1;
     margin-right: 3px;
-
-    .dark-mode & {
-      color: $dark-second-text-color;
-      background: $dark-lowest-text-color;
-    }
-
-    .light-mode & {
-      color: $light-second-text-color;
-      background: $light-lowest-text-color;
-    }
+    color: var(--compare-tag-text-color);
+    background: var(--compare-tag-background-color);
   }
 
   .item-true {
-    color: #478ef2;
+    color: var(--primary-color);
   }
 
   .item-false {
     width: 8px;
     height: 1px;
     border-radius: 2px;
-
-    .dark-mode & {
-      background: $dark-lowest-text-color;
-    }
-
-    .light-mode & {
-      background: $light-lowest-text-color;
-    }
+    background: var(--lowest-text-color);
   }
 
   .name-wrapper {
@@ -327,30 +365,23 @@
     .original-tr {
       padding-top: 10px;
       padding-bottom: 20px;
-
-      .dark-mode & {
-        border-bottom: 1px solid $dark-divider-color;
-      }
-
-      .light-mode & {
-        border-bottom: 1px solid $light-divider-color;
-      }
+      border-bottom: 1px solid var(--divider-color);
     }
   }
 
   .compare-table-row {
-    padding: 0 $safe-area-side;
+    padding: 0 var(--safe-area-side);
   }
 
   .compare-table-head {
-    padding: 10px $safe-area-side;
+    padding: 10px var(--safe-area-side);
   }
 
   .compare-table-head,
   .compare-table-row {
     margin: 0;
     display: grid;
-    grid-template-columns: 220px 1fr 1fr 1fr 1fr;
+    grid-template-columns: 46% 1fr 1fr 1fr 1fr;
 
     li {
     }
@@ -370,22 +401,11 @@
   .compare-table-head {
     position: sticky;
     z-index: 7;
-    top: 118px;
-    background: inherit;
-    border-bottom: 1px solid;
+    top: 114px;
+    border-bottom: 1px solid var(--divider-color);
     font-weight: bold;
-
-    .dark-mode & {
-      background: $dark-background-color;
-      color: $dark-comment-text-color;
-      border-color: $dark-divider-color;
-    }
-
-    .light-mode & {
-      background: $light-background-color;
-      color: $light-comment-text-color;
-      border-color: $light-divider-color;
-    }
+    background: var(--background-color);
+    color: var(--comment-text-color);
 
     &.filter-table-head {
       top: 84px;
@@ -394,7 +414,6 @@
 
   .processed-item,
   .original-item {
-    overflow: scroll;
     display: flex;
     align-items: center;
 
@@ -405,7 +424,7 @@
       height: 6px;
       border-radius: 50%;
       margin-right: 10px;
-      background: $primary-color;
+      background: var(--primary-color);
     }
   }
 
@@ -414,69 +433,40 @@
   }
 
   .processed-item::before {
-    background: #0ed57d;
+    background: var(--third-color);
   }
 
   .block-wrapper {
     position: relative;
-
-    .dark-mode & {
-      background: $dark-compare-item-background-color;
-    }
-
-    .light-mode & {
-      background: $light-compare-item-background-color;
-    }
+    background: var(--compare-item-background-color);
 
     .compare-title {
-      padding: 0 $safe-area-side;
+      padding: 0 var(--safe-area-side);
       z-index: 9;
       margin-top: 0;
       top: 56px;
-
-      .dark-mode & {
-        background: $dark-background-color;
-      }
-
-      .light-mode & {
-        background: $light-background-color;
-      }
+      background: var(--background-color);
     }
 
     .compare-des {
-      padding: 8px $safe-area-side;
+      padding: 6px var(--safe-area-side);
       z-index: 8;
       display: flex;
       position: sticky;
       top: 84px;
-
-      .dark-mode & {
-        background: $dark-background-color;
-        color: $dark-comment-text-color;
-      }
-
-      .light-mode & {
-        background: $light-background-color;
-        color: $light-comment-text-color;
-      }
+      background: var(--background-color);
+      color: var(--comment-text-color);
     }
   }
 
   .compare-page-body {
     font-size: 12px;
     background: inherit;
-
-    .dark-mode & {
-      color: $dark-comment-text-color;
-    }
-
-    .light-mode & {
-      color: $light-second-text-color;
-    }
+    color: var(--comment-text-color);
   }
 
   .compare-page-header {
-    padding: $safe-area-side;
+    padding: var(--safe-area-side);
     position: sticky;
     top: 0;
     z-index: 19;
@@ -485,28 +475,32 @@
     align-items: center;
     height: 56px;
     border-bottom: 1px solid;
-
-    .dark-mode & {
-      color: $dark-primary-text-color;
-      background: $dark-background-color;
-      border-color: $dark-divider-color;
-    }
-
-    .light-mode & {
-      color: $light-primary-text-color;
-      background: $light-background-color;
-      border-color: $light-divider-color;
-    }
+    color: var(--primary-text-color);
+    background: var(--background-color);
+    border-color: var(--divider-color);
 
     h1 {
+      display: flex;
+      align-items: center;
       font-size: 20px;
       line-height: 1;
       font-weight: 500;
 
-      svg {
+      > svg {
         margin-right: 6px;
         width: 20px;
         height: 20px;
+      }
+
+      span {
+        margin-left: 8px;
+        font-size: 14px;
+        color: var(--second-text-color);
+
+        > svg {
+          margin-right: 4px;
+          color: var(--comment-text-color);
+        }
       }
     }
 
@@ -515,14 +509,7 @@
       border: none;
       font-size: 20px;
       padding: 8px;
-
-      .dark-mode & {
-        color: $dark-lowest-text-color;
-      }
-
-      .light-mode & {
-        color: $light-lowest-text-color;
-      }
+      color: var(--lowest-text-color);
     }
   }
 
@@ -532,28 +519,13 @@
     z-index: 1000;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
-    max-width: var(--main-max-width);
-
-    .dark-mode & {
-      background: $dark-background-color;
-    }
-
-    .light-mode & {
-      background: $light-background-color;
-    }
+    background: var(--background-color);
   }
 
   .divider,
   .divider::before,
   .divider::after {
-    .dark-mode & {
-      color: $dark-lowest-text-color;
-      border-color: $dark-lowest-text-color;
-    }
-
-    .light-mode & {
-      color: $light-lowest-text-color;
-      border-color: $light-lowest-text-color;
-    }
+    color: var(--lowest-text-color);
+    border-color: var(--lowest-text-color);
   }
 </style>

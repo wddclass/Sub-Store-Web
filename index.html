@@ -13,24 +13,32 @@
       content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"
       name="viewport"
     />
-    <title>Sub-Store</title>
+    <title>Sub Store</title>
     <meta
       name="description"
       content="A sub-converter running in a Progressive Web App"
     />
-    <link rel="icon" href="/favicon.ico" />
-    <meta
-      name="theme-color"
-      media="(prefers-color-scheme: light)"
-      content="#f4f4f4"
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link
+      rel="alternate icon"
+      href="/favicon.ico"
+      type="image/png"
+      sizes="16x16"
     />
-    <meta
-      name="theme-color"
-      media="(prefers-color-scheme: dark)"
-      content="#121212"
-    />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+    <link rel="mask-icon" href="/favicon.svg" color="#FFFFFF" />
+    <meta id="theme__color" name="theme-color" content="#121212" />
     <link rel="manifest" href="/manifest.json" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vConsole/3.15.0/vconsole.min.js"></script>
+    <script>
+      function getUrlParams(value) {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        return urlParams.get(value);
+      }
+      if (getUrlParams('api')) {
+        localStorage.setItem('api', getUrlParams('api'));
+      }
+    </script>
   </head>
   <body>
     <noscript>
@@ -40,18 +48,7 @@
         continue.</strong
       >
     </noscript>
-    <div class="layout">
-      <div class="main-layout">
-        <div id="app"></div>
-      </div>
-    </div>
+    <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
-    <script>
-      window.initvConsole = new window.VConsole({
-        onReady: () => {
-          window.initvConsole.hideSwitch();
-        },
-      });
-    </script>
   </body>
 </html>

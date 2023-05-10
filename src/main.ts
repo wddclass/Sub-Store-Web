@@ -1,27 +1,25 @@
-import { createApp } from 'vue';
-import router from '@/router';
-import { createPinia } from 'pinia';
-import i18n from '@/locales';
-
+import '@/assets/styles/fonts.scss';
+import '@/assets/styles/global.scss';
+import '@/assets/styles/overwritten_css_var.scss';
+// import VConsole from 'vconsole';
+//
+// const vConsole = new VConsole();
 import SvgIcon from '@/components/SvgIcon.vue';
-import 'virtual:svg-icons-register';
-
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import i18n from '@/locales';
 import '@/plugin/awesomeIcon';
 
 import nutUi from '@/plugin/nutui';
+import router from '@/router';
 
-import '@/assets/remove_default_style.scss';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import 'modern-css-reset/dist/reset.min.css';
-import '@/assets/fonts.scss';
-import '@/assets/global_overwritten_nutui.scss';
-
-import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
+import { createPinia } from 'pinia';
+import 'virtual:svg-icons-register';
+import { createApp } from 'vue';
 
 import App from './App.vue';
 
 const pinia = createPinia();
-pinia.use(piniaPluginPersistedstate);
 const app = createApp(App);
 
 nutUi(app);

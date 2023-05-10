@@ -4,6 +4,3 @@ type ActionModuleProps = {
   component: any;
   tipsDes: string;
 };
-declare interface Window {
-  initvConsole: any;
-}

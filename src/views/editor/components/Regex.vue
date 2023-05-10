@@ -17,15 +17,17 @@
     </p>
     <div class="tag-wrapper">
       <nut-tag
+        @click="onClickTag"
+        class="tag-item"
         v-for="(content, index) in value"
         closeable
         @close="deleteRegexItem(index)"
-        type="primary"
-        >{{
+      >
+        <span>{{
           type === 'Regex Rename Operator'
             ? `${content.expr}  ⇒  ${content.now}`
             : content
-        }}
+        }}</span>
       </nut-tag>
     </div>
     <div class="input-wrapper">
@@ -50,10 +52,10 @@
 </template>
 
 <script lang="ts" setup>
-  import { inject, ref, onMounted, watch } from 'vue';
-  import { useI18n } from 'vue-i18n';
-  import { useRouter, onBeforeRouteLeave } from 'vue-router';
   import { Dialog } from '@nutui/nutui';
+  import { inject, onMounted, ref, watch } from 'vue';
+  import { useI18n } from 'vue-i18n';
+  import { onBeforeRouteLeave, useRouter } from 'vue-router';
 
   const { t } = useI18n();
   const router = useRouter();
@@ -76,11 +78,45 @@
   const mode = ref();
   const value = ref();
 
+  const onClickTag = el => {
+    const index = [...el.currentTarget.parentElement.children].indexOf(
+      el.currentTarget
+    );
+    if (input1.value || input2.value) {
+      Dialog({
+        title: t('editorPage.subConfig.pop.clickTag.title'),
+        content: t('editorPage.subConfig.pop.clickTag.content'),
+        popClass: 'auto-dialog',
+        okText: t(`editorPage.subConfig.pop.clickTag.confirm`),
+        cancelText: t(`editorPage.subConfig.pop.clickTag.cancel`),
+        onOk: () => editTag(index),
+        // onCancel: () => resolve(false),
+        // @ts-ignore
+        closeOnClickOverlay: true,
+      });
+    } else {
+      editTag(index);
+    }
+  };
+
+  const editTag = index => {
+    const oldValue = value.value[index];
+
+    value.value.splice(index, 1);
+    if (type === 'Regex Rename Operator') {
+      input1.value = oldValue.expr;
+      input2.value = oldValue.now;
+    } else {
+      input1.value = oldValue;
+    }
+  };
+
   const deleteRegexItem = index => {
     value.value.splice(index, 1);
   };
 
   const addItem = () => {
+    if (!input1.value) return;
     if (type === 'Regex Rename Operator') {
       value.value.push({
         expr: input1.value,
@@ -144,22 +180,13 @@
 </script>
 
 <style lang="scss" scoped>
-  @import '@/assets/custom_theme_variables.scss';
-
   .des-label {
     font-size: 12px;
     margin-bottom: 8px;
+    color: var(--comment-text-color);
 
     &:not(:first-child) {
       margin-top: 16px;
-    }
-
-    .dark-mode & {
-      color: $dark-comment-text-color;
-    }
-
-    .light-mode & {
-      color: $light-comment-text-color;
     }
   }
 
@@ -171,19 +198,22 @@
 
   .tag-wrapper {
     margin-bottom: 12px;
+    max-width: 100%;
 
-    view {
+    .tag-item {
+      max-width: 100%;
       margin-right: 8px;
       margin-bottom: 8px;
 
-      .dark-mode & {
-        background-color: $dark-compare-item-background-color;
-        color: $dark-second-text-color;
-      }
-
-      .light-mode & {
-        background-color: $light-compare-item-background-color;
-        color: $light-second-text-color;
+      span {
+        max-width: 95%;
+        display: -webkit-box;
+        white-space: normal !important;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
       }
     }
   }
@@ -196,23 +226,12 @@
       background: transparent;
       padding: 8px 12px;
       margin-right: 16px;
-      border-bottom: 1px solid;
-
-      .dark-mode & {
-        color: $dark-second-text-color;
-        border-color: $dark-lowest-text-color;
-      }
-
-      .light-mode & {
-        color: $light-second-text-color;
-        border-color: $light-lowest-text-color;
-      }
     }
 
     > svg {
       width: 20px;
       height: 20px;
-      color: $primary-color;
+      color: var(--primary-color);
       flex: 1;
       padding-right: 12px;
     }

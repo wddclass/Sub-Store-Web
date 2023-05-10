@@ -107,6 +107,7 @@
             prop="content"
           >
             <nut-textarea
+              class="textarea-wrapper"
               v-model="form.content"
               :autosize="{ maxHeight: 110, minHeight: 50 }"
               :placeholder="
@@ -154,12 +155,6 @@
                     :url="item[2]"
                     bg-color=""
                   ></nut-avatar>
-                  <nut-avatar
-                    class="sub-item-customer-icon"
-                    size="32"
-                    v-else
-                    :icon="icon"
-                  ></nut-avatar>
                   <span>{{ item[1] }}</span>
                 </div>
               </nut-checkbox>
@@ -200,65 +195,70 @@
 
   <CompareTable
     v-if="compareTableIsVisible"
+    :name="configName"
     :compareData="compareData"
     @closeCompare="closeCompare"
   />
 </template>
 
 <script lang="ts" setup>
-  import icon from '@/assets/icons/logo.png?url';
-  import { useRoute, useRouter } from 'vue-router';
-  import { useSubsStore } from '@/store/subs';
-  import {
-    watchEffect,
-    ref,
-    toRaw,
-    computed,
-    provide,
-    reactive,
-    shallowRef,
-  } from 'vue';
-  import { useI18n } from 'vue-i18n';
-  import CommonBlock from '@/views/editor/CommonBlock.vue';
+  import { useSubsApi } from '@/api/subs';
+  import icon from '@/assets/icons/logo.svg';
+  import { usePopupRoute } from '@/hooks/usePopupRoute';
+  import { useAppNotifyStore } from '@/store/appNotify';
   import { useGlobalStore } from '@/store/global';
+  import { useSubsStore } from '@/store/subs';
+  import { addItem, deleteItem } from '@/utils/actionsOperate';
+  import { actionsToProcess } from '@/utils/actionsToPorcess';
+  import { initStores } from '@/utils/initApp';
+  import CompareTable from '@/views/CompareTable.vue';
   import ActionBlock from '@/views/editor/ActionBlock.vue';
+  import CommonBlock from '@/views/editor/CommonBlock.vue';
   import ActionRadio from '@/views/editor/components/ActionRadio.vue';
   import FilterSelect from '@/views/editor/components/FilterSelect.vue';
   import HandleDuplicate from '@/views/editor/components/HandleDuplicate.vue';
-  import Script from '@/views/editor/components/Script.vue';
   import Regex from '@/views/editor/components/Regex.vue';
-  import { actionsToProcess } from '@/utils/actionsToPorcess';
-  import { deleteItem, addItem } from '@/utils/actionsOperate';
-  import { Dialog, Notify, Toast } from '@nutui/nutui';
-  import { useSubsApi } from '@/api/subs';
-  import CompareTable from '@/views/CompareTable.vue';
+  import Script from '@/views/editor/components/Script.vue';
+  import { Dialog, Toast } from '@nutui/nutui';
+  import {
+    computed,
+    provide,
+    reactive,
+    ref,
+    shallowRef,
+    toRaw,
+    watchEffect,
+  } from 'vue';
+  import { useI18n } from 'vue-i18n';
+  import { useRoute, useRouter } from 'vue-router';
 
   const { t } = useI18n();
   const route = useRoute();
   const router = useRouter();
   const subsApi = useSubsApi();
-  const { editType, id: configName } = route.params;
+  const editType = route.params.editType as string;
+  const configName = route.params.id as string;
   const subsStore = useSubsStore();
+  const { showNotify } = useAppNotifyStore();
 
   const { bottomSafeArea } = useGlobalStore();
   const padding = bottomSafeArea + 'px';
 
-  const sub = computed(() => subsStore.getOneSub(configName as string));
-  const collection = computed(() =>
-    subsStore.getOneCollection(configName as string)
-  );
+  const sub = computed(() => subsStore.getOneSub(configName));
+  const collection = computed(() => subsStore.getOneCollection(configName));
 
   const subsSelectList = computed(() => {
     return subsStore.subs.map(item => {
       return [
         item.name,
         item.displayName || item['display-name'] || item.name,
-        item.icon || null,
+        item.icon || icon,
       ];
     });
   });
 
   const compareTableIsVisible = ref(false);
+  usePopupRoute(compareTableIsVisible);
   const compareData = ref();
 
   const isInit = ref(false);
@@ -266,49 +266,62 @@
   const actionsChecked = reactive([]);
   const actionsList = reactive([]);
 
-  const form = reactive<any>({ process: [] });
+  const form = reactive<any>({
+    name: '',
+    displayName: '',
+    icon: '',
+    process: [
+      {
+        type: 'Quick Setting Operator',
+      },
+    ],
+  });
   provide('form', form);
 
   // 排除非动作卡片
   const ignoreList = ['Quick Setting Operator'];
 
   watchEffect(() => {
-    // 新建时，初始化表单
+    if (isInit.value) return;
     if (configName === 'UNTITLED') {
-      if (editType === 'collections') {
-        Object.assign(form, {
-          name: '',
-          displayName: '',
-          icon: '',
-          subscriptions: [],
-        });
-      } else if (editType === 'subs') {
-        Object.assign(form, {
-          name: '',
-          displayName: '',
-          source: 'remote',
-          url: '',
-          content: '',
-          ua: '',
-          icon: '',
-        });
+      // 新建时，初始化表单
+      switch (editType) {
+        case 'collections':
+          form.subscriptions = [];
+          break;
+        case 'subs':
+          form.source = 'remote';
+          form.url = '';
+          form.content = '';
+          form.ua = '';
+          break;
       }
-    } else {
-      // 如果没有初始化过数据，则初始化数据
-      if (!isInit.value) {
-        Object.assign(form, sub.value, collection.value);
-
-        // 兼容旧版本的数据格式
-        //@ts-ignore
-        form.displayName = !form.displayName
-          ? form['display-name']
-          : //@ts-ignore
-            form.displayName;
-      }
+      // 标记 加载完成
+      isInit.value = true;
+      return;
     }
 
-    // 将后端数据格式转为前端数据格式
-    if (!isInit.value && form.process.length > 0) {
+    const sourceData: any = toRaw(sub.value) || toRaw(collection.value);
+    const newProcess = JSON.parse(JSON.stringify(sourceData.process));
+    form.name = sourceData.name;
+    form.displayName = sourceData.displayName || sourceData['display-name'];
+    form.icon = sourceData.icon;
+    form.process = newProcess;
+
+    switch (editType) {
+      case 'collections':
+        form.subscriptions = [];
+        form.subscriptions.push(...sourceData.subscriptions);
+        break;
+      case 'subs':
+        form.source = sourceData.source;
+        form.url = sourceData.url;
+        form.content = sourceData.content;
+        form.ua = sourceData.ua;
+        break;
+    }
+
+    if (sourceData.process.length > 0) {
       form.process.forEach(item => {
         const { type, id } = item;
 
@@ -349,9 +362,10 @@
           actionsList.push(action);
         }
       });
-      // 标记 加载完成
-      isInit.value = true;
     }
+    // 标记 加载完成
+    isInit.value = true;
+    return;
   });
 
   const addAction = val => {
@@ -364,6 +378,7 @@
 
   const closeCompare = () => {
     compareTableIsVisible.value = false;
+    router.back();
   };
 
   const compare = () => {
@@ -382,7 +397,7 @@
         return;
       }
 
-      Toast.loading('生成节点对比中...', { id: 'compare' });
+      Toast.loading('生成节点对比中...', { id: 'compare', cover: true });
       const data: any = JSON.parse(JSON.stringify(toRaw(form)));
       data.process = actionsToProcess(data.process, actionsList, ignoreList);
 
@@ -396,7 +411,6 @@
         }
       });
 
-      console.log('compare.....\n', data);
       const type = editType === 'collections' ? 'collection' : 'sub';
       const res = await subsApi.compareSub(type, data);
       if (res.data.status === 'success') {
@@ -428,14 +442,14 @@
       data['display-name'] = data.displayName;
       data.process = actionsToProcess(data.process, actionsList, ignoreList);
 
-      console.log('submit.....\n', data);
+      // console.log('submit.....\n', data);
 
-      const duration = 1000;
       let res = null;
 
       if (configName === 'UNTITLED') {
-        res = await subsApi.createSub(editType as string, data);
+        res = await subsApi.createSub(editType, data);
         await subsStore.fetchSubsData();
+        if (data.source === 'remote') await initStores(false, true, false);
       } else {
         let apiType = '';
         if (editType === 'subs') {
@@ -443,14 +457,11 @@
         } else if (editType === 'collections') {
           apiType = 'collection';
         }
-        res = await subsApi.editSub(apiType, configName as string, data);
+        res = await subsApi.editSub(apiType, configName, data);
 
         if (configName === data.name) {
           // @ts-ignore
-          await subsStore.updateOneData(
-            editType as string,
-            configName as string
-          );
+          await subsStore.updateOneData(editType, configName);
         } else {
           await subsStore.fetchSubsData();
         }
@@ -458,20 +469,19 @@
 
       router.replace('/').then(() => {
         if (res)
-          Notify.success(t(`editorPage.subConfig.pop.succeedMsg`), {
-            duration,
+          showNotify({
+            type: 'success',
+            title: t(`editorPage.subConfig.pop.succeedMsg`),
           });
       });
     });
   };
 
   // 唯一名称验证器
-  const nameValidator = (val: string) => {
+  const nameValidator = (val: string): Promise<boolean> => {
     return new Promise(resolve => {
       if (val === 'UNTITLED') resolve(false);
-      const nameList = Object.keys(subsStore.subs).concat(
-        Object.keys(subsStore.collections)
-      );
+      const nameList = subsStore.subs.map(item => item.name);
       nameList.includes(val) && configName !== val
         ? resolve(false)
         : resolve(true);
@@ -479,7 +489,7 @@
   };
 
   // url 格式验证器
-  const urlValidator = (val: string) => {
+  const urlValidator = (val: string): Promise<boolean> => {
     return new Promise(resolve => {
       resolve(/^(http|https):\/\/\S+$/.test(val));
     });
@@ -492,30 +502,23 @@
 </script>
 
 <style lang="scss" scoped>
-  @import '@/assets/custom_theme_variables.scss';
-
   .page-wrapper {
-    padding: 0 $safe-area-side calc(v-bind(padding) + 63px) $safe-area-side;
+    padding: 0 var(--safe-area-side) calc(v-bind(padding) + 63px)
+      var(--safe-area-side);
 
     :deep(.nut-cell-group__warp) {
-      border-radius: $item-card-radios;
+      border-radius: var(--item-card-radios);
     }
   }
 
   .radio-wrapper {
     display: flex;
     justify-content: end;
-  }
 
-  .textarea-wrapper {
-    :deep(textarea) {
-      .dark-mode & {
-        color: $dark-second-text-color;
-      }
-
-      .light-mode & {
-        color: $light-second-text-color;
-      }
+    :deep(.nut-radio__button.false) {
+      background: var(--divider-color);
+      border-color: transparent;
+      color: var(--second-text-color);
     }
   }
 
@@ -529,18 +532,10 @@
     justify-content: space-between;
     bottom: 0;
     width: 100%;
-    padding: 12px $safe-area-side v-bind(padding) $safe-area-side;
+    padding: 12px var(--safe-area-side) v-bind(padding) var(--safe-area-side);
     z-index: 20;
-
-    .dark-mode & {
-      background: $dark-background-color;
-      border-top: 1px solid $dark-divider-color;
-    }
-
-    .light-mode & {
-      background: $light-background-color;
-      border-top: 1px solid $light-divider-color;
-    }
+    background: var(--background-color);
+    border-top: 1px solid var(--divider-color);
 
     .btn {
       border-radius: 8px;
@@ -558,15 +553,6 @@
     .compare-btn {
       background: transparent;
       width: 36%;
-
-      .dark-mode & {
-        color: $dark-second-text-color;
-        border-color: $dark-lowest-text-color;
-      }
-      .light-mode & {
-        color: $light-second-text-color;
-        border-color: $light-lowest-text-color;
-      }
     }
 
     .submit-btn {
@@ -593,14 +579,7 @@
         &:not(:last-child) {
           padding: 16px 0 16px 0;
           border-bottom: 1px solid;
-        }
-
-        .dark-mode &:not(:last-child) {
-          border-color: $dark-divider-color;
-        }
-
-        .light-mode & {
-          border-color: $light-divider-color;
+          border-color: var(--divider-color);
         }
 
         .sub-img-wrapper {
@@ -608,14 +587,7 @@
           display: flex;
           align-items: center;
           font-size: 14px;
-
-          .dark-mode & {
-            color: $dark-second-text-color;
-          }
-
-          .light-mode & {
-            color: $light-second-text-color;
-          }
+          color: var(--second-text-color);
 
           span {
             max-width: 56vw;
@@ -633,12 +605,8 @@
             :deep(img) {
               object-fit: contain;
 
-              .dark-mode &:not(.nut-icon__img) {
-                filter: brightness(1000%);
-              }
-
-              .light-mode &:not(.nut-icon__img) {
-                filter: brightness(0);
+              &:not(.nut-icon__img) {
+                filter: brightness(var(--img-brightness));
               }
             }
           }
