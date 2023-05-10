@@ -42,6 +42,14 @@
     }
   });
 
+  onCreated(()=>{
+    if (sessionStorage.redirect) {
+            const redirect = sessionStorage.redirect
+            delete sessionStorage.redirect
+            router.push(redirect)
+        }
+  })
+
   // 初始化应用数据（顶部通知）
   initStores(true, true);
 </script>
