@@ -300,7 +300,7 @@
     await subsStore.fetchSingleFlow(props.sub.url, props.sub.name);
   };
   const onClickCopyLink = async () => {
-    const host = import.meta.env.VITE_API_URL;
+    const host = localStorage.getItem('api');
     const url = `${host}/download/${
       props.type === 'collection' ? 'collection/' : ''
     }${name}`;
