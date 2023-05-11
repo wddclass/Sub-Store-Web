@@ -37,7 +37,9 @@
     name: string;
     type: 'sub' | 'collection';
   }>();
-  const host = localStorage.getItem('api');
+  const host = localStorage.getItem('api').endsWith('/')
+    ? localStorage.getItem('api').slice(0, -1)
+    : localStorage.getItem('api');
   const platformList = [
     {
       name: 'Clash',

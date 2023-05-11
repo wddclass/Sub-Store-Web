@@ -300,7 +300,9 @@
     await subsStore.fetchSingleFlow(props.sub.url, props.sub.name);
   };
   const onClickCopyLink = async () => {
-    const host = localStorage.getItem('api');
+    const host = localStorage.getItem('api').endsWith('/')
+      ? localStorage.getItem('api').slice(0, -1)
+      : localStorage.getItem('api');
     const url = `${host}/download/${
       props.type === 'collection' ? 'collection/' : ''
     }${name}`;
