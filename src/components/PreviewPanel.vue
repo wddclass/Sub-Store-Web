@@ -37,7 +37,7 @@
     name: string;
     type: 'sub' | 'collection';
   }>();
-  const host = import.meta.env.VITE_API_URL;
+  const host = localStorage.getItem('api');
   const platformList = [
     {
       name: 'Clash',
