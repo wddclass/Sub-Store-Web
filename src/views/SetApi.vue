@@ -53,6 +53,9 @@
   });
 
   const confirm = () => {
+    if (apiUrl.value.endsWith('/')) {
+      apiUrl.value = apiUrl.value.slice(0, -1);
+    }
     window.localStorage.setItem('api', apiUrl.value);
     service.defaults.baseURL = apiUrl.value;
     router.push(`/`);
