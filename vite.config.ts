@@ -1,9 +1,9 @@
 import vue from '@vitejs/plugin-vue';
 import * as path from 'path';
 import { ConfigEnv, defineConfig, loadEnv } from 'vite';
-import monacoEditorPlugin from 'vite-plugin-monaco-editor';
 import { createStyleImportPlugin } from 'vite-plugin-style-import';
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
+import viteCompression from 'vite-plugin-compression'
 
 const alias: Record<string, string> = {
   '@': path.resolve(__dirname, 'src'),
@@ -33,7 +33,13 @@ const viteConfig = defineConfig((mode: ConfigEnv) => {
         symbolId: 'icon-[dir]-[name]',
         customDomId: '__svg__icons__dom__',
       }),
-      monacoEditorPlugin({}),
+      viteCompression({
+        // verbose: true,
+        // disable: false,
+        threshold: 10240,
+        // algorithm: 'gzip',
+        // ext: '.gz'
+      }),
     ],
     root: process.cwd(),
     resolve: { alias },
@@ -44,18 +50,20 @@ const viteConfig = defineConfig((mode: ConfigEnv) => {
       open: env.VITE_OPEN,
     },
     build: {
-      outDir: 'dist',
+      outDir: 'distpwa',
       sourcemap: false,
       chunkSizeWarningLimit: 1500,
       target: 'es2015',
       minify: 'terser',
+      input: {
+        main: 'src/main.ts',
+        SplashScreen: 'src/SplashScreen.vue',
+      },
       rollupOptions: {
         output: {
-          manualChunks: {
-            'monaco-editor': ['monaco-editor'],
-            '@nutui/nutui': ['@nutui/nutui'],
-            '@vueuse/core': ['@vueuse/core'],
-          },
+          entryFileNames: '[name].js',
+          chunkFileNames: '[name].js',
+          assetFileNames: '[name].[ext]',
         },
       },
       terserOptions: {

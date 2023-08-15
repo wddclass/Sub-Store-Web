@@ -7,13 +7,13 @@ export default {
   },
   colors: {
     // 全局高亮色
-    'primary-color': '#478EF2',
-    'primary-color-end': '#496AF2',
-    'second-color': '#FA6419',
-    'third-color': '#0ED57D',
+    'primary-color': '#6f9cc5',
+    'primary-color-end': '#8389c8',
+    'second-color': '#d47878',
+    'third-color': '#70b496',
 
-    'danger-color': '#E56459',
-    'succeed-color': '#0ED57D',
+    'danger-color': '#c16058',
+    'succeed-color': '#49bb88',
 
     // icon色
     'icon-nav-bar-right': '#606266',
@@ -50,3 +50,6 @@ export default {
     'compare-tag-background-color': '#FFFFFF22',
   },
 };
+//--second-text-color
+//--comment-text-color 覆盖
+

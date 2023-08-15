@@ -1,7 +1,8 @@
-import { defineStore, createPinia } from 'pinia';
+import { defineStore } from 'pinia';
 import { useEnvApi } from '@/api/env';
+import service from '@/api';
+import { initStores } from '@/utils/initApp';
 
-export let pinia = createPinia();
 const envApi = useEnvApi();
 
 export const useGlobalStore = defineStore('globalStore', {
@@ -13,14 +14,13 @@ export const useGlobalStore = defineStore('globalStore', {
       bottomSafeArea: 0,
       isDarkMode: false,
       env: {},
-      apiUrl: ''
+      isSimpleMode: localStorage.getItem('isSimpleMode') === 'on',
+      isLeftRight: localStorage.getItem('isLr') === '1',
+      ishostApi: localStorage.getItem('hostApi'),
     };
   },
   getters: {},
   actions: {
-    setApiUrl(value: string) {
-      this.apiUrl = value;
-    },
     setBottomSafeArea(height: number) {
       this.bottomSafeArea = height;
     },
@@ -35,6 +35,29 @@ export const useGlobalStore = defineStore('globalStore', {
     },
     setDarkMode(isDarkMode: boolean) {
       this.isDarkMode = isDarkMode;
+    },
+    setSimpleMode(isSimpleMode: boolean) {
+      if (isSimpleMode) {
+        localStorage.setItem('isSimpleMode', 'on');
+      } else {
+        localStorage.removeItem('isSimpleMode');
+      }
+      this.isSimpleMode = isSimpleMode;
+    },
+    setLeftRight(isLr: boolean) {
+      if (isLr) {
+        localStorage.setItem('isLr', '1');
+      } else {
+        localStorage.removeItem('isLr');
+      }
+      this.isLeftRight = isLr;
+    },
+    sethostApi(hostApi: string) {
+      localStorage.setItem('hostApi', hostApi);
+      this.ishostApi = hostApi;
+      service.defaults.baseURL = hostApi;
+      // 初始化应用数据（顶部通知）
+      initStores(true, true, false);
     },
     async setEnv() {
       const res = await envApi.getEnv();

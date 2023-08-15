@@ -16,6 +16,8 @@ import {
   faFloppyDisk,
   faGrip,
   faLanguage,
+  faToggleOn,
+  faToggleOff,
   faLocationArrow,
   faPaste,
   faPenNib,
@@ -27,8 +29,11 @@ import {
   faICursor,
   faCircleHalfStroke,
   faRotateRight,
+  faXmark
 } from '@fortawesome/free-solid-svg-icons';
 
+library.add(faToggleOn);
+library.add(faToggleOff);
 library.add(faLanguage);
 library.add(faCheck);
 library.add(faPlus);
@@ -55,3 +60,4 @@ library.add(faT);
 library.add(faICursor);
 library.add(faCircleHalfStroke);
 library.add(faRotateRight);
+library.add(faXmark);

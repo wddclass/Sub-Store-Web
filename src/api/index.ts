@@ -10,8 +10,8 @@ const notifyConfig: { type: 'danger'; duration: number } = {
 
 // 配置新建一个 axios 实例
 const service = axios.create({
-  baseURL: localStorage.getItem('api'),
-  timeout: 50000,
+  baseURL: localStorage.getItem('hostApi') || import.meta.env.VITE_API_URL || 'https://sub.store',
+  timeout: 7000,
   headers: { 'Content-Type': 'application/json' },
 });
 

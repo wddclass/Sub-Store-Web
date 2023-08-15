@@ -10,9 +10,10 @@
         }}
       </nut-radio>
     </nut-radiogroup>
-    <p class="des-label" v-if="value.mode === 'link'">
+    
+    <!-- <p class="des-label" v-if="value.mode === 'link'">
       {{ $t(`editorPage.subConfig.nodeActions['${type}'].des[1]`) }}
-    </p>
+    </p> -->
     <div class="input-wrapper" v-if="value.mode === 'link'">
       <nut-textarea
         v-model="value.content"
@@ -22,35 +23,98 @@
         :rows="5"
       />
     </div>
+
+    
+    
+    <div v-if="value.mode === 'script'">
+    <div class="input-wrapper">
+      <nut-textarea
+        v-model="value.code"
+        :placeholder="
+$t(`// This is example
+function operator(proxies, targetPlatform) {
+  return proxies.map( proxy => {
+    // Change proxy information here
+
+    return proxy;
+  });
+}
+
+function filter(proxies, targetPlatform) {
+  return proxies.map( proxy => {
+    // Return true if the current proxy is selected
+
+    return true;
+  });
+}
+`)"  :rows="23"
+      />
+      <!-- <span>
+        <font-awesome-icon icon="fa-solid fa-code" />
+        {{ $t(`editorPage.subConfig.nodeActions['${type}'].openEditorBtn`) }}
+      </span> -->
+      
+    </div>
+    <!-- <br> -->
+    <!-- <span class="editor-page-header">
+      <button  @click="onclearEditor">
+      <font-awesome-icon icon="fa-solid fa-eraser" />
+    </button>
+    </span> -->
+ 
     <button
       class="open-editor-btn"
-      v-else-if="value.mode === 'script'"
-      @click="editorIsVisible = true"
+      v-if="value.mode === 'script'"
+      @click="onclearEditor"
     >
       <span>
         <font-awesome-icon icon="fa-solid fa-code" />
-        {{ $t(`editorPage.subConfig.nodeActions['${type}'].openEditorBtn`) }}
+        {{ $t(`清空脚本`) }}
       </span>
     </button>
-    <MonacoEditor
-      v-if="editorIsVisible"
-      @close="onCloseEditor"
-      :code="value.code"
-    ></MonacoEditor>
+  </div>
+    <!-- <nut-textarea
+        v-model="value.content"
+        :placeholder="
+          $t(`editorPage.subConfig.nodeActions['${type}'].placeholder`)
+        "
+        :rows="5"
+      /> -->
+
+  <!-- function operator(proxies, targetPlatform) {
+  return proxies.map( proxy => {
+    // Change proxy information here
+
+    return proxy;
+  });
+}
+
+function filter(proxies, targetPlatform) {
+  return proxies.map( proxy => {
+    // Return true if the current proxy is selected
+
+    return true;
+  });
+} -->
+
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { inject, reactive, onMounted, watch, ref } from 'vue';
+  import { inject, reactive, onMounted, watch, ref ,toRaw } from 'vue';
   import { usePopupRoute } from '@/hooks/usePopupRoute';
-  import MonacoEditor from '@/views/editor/components/MonacoEditor.vue';
+  // import MonacoEditor from '@/views/editor/components/MonacoEditor.vue';
   import { useRouter } from 'vue-router';
+  import { Dialog } from '@nutui/nutui';
+  import { useI18n } from 'vue-i18n';
 
   const router = useRouter();
   const { type, id } = defineProps<{
     type: string;
     id: string;
   }>();
+
+  const { t } = useI18n();
 
   const form = inject<Sub | Collection>('form');
 
@@ -63,6 +127,8 @@
     content: '',
     code: '',
   });
+
+
 
   const onCloseEditor = val => {
     value.code = val;
@@ -92,6 +158,37 @@
       item.args.content = value.content;
     }
   });
+
+    // 清空编辑器内容
+    const onclearEditor = () => {
+      Dialog({
+        title: t('editorPage.subConfig.pop.clearTitle'),
+        content: t('editorPage.subConfig.pop.clearDes'),
+        popClass: 'auto-dialog',
+        okText: t(`editorPage.subConfig.pop.clearConfirm`),
+        cancelText: t(`editorPage.subConfig.pop.clearCancel`),
+        // onOk: () =>toRaw(value.code)?.setValue(''),
+        onOk: () => {
+      // Assuming value.code is the Monaco Editor instance
+        value.code =''; // Clear the editor content
+    },
+        // onCancel: () => resolve(false),
+        // @ts-ignore
+        closeOnClickOverlay: true,
+      });
+    
+  };
+
+  //   // 全选
+  //   const onSelectAll = () => {
+  //   const editor = toRaw(value.code);
+  //   if (editor) {
+  //     const range = editor.getFullModelRange();
+  //     editor.setSelection(range);
+  //   }
+  // };
+
+
 </script>
 
 <style lang="scss" scoped>
@@ -140,6 +237,49 @@
     font-weight: bold;
     svg {
       margin-right: 8px;
+    }
+  }
+
+  .editor-page-header {
+    padding: var(--safe-area-side);
+    // position: sticky;
+    top: 0;
+    // z-index: 19;
+    display: flex;
+    // justify-content: space-between;
+    align-items: center;
+    height: 56px;
+    // color: #951b1bee;
+    // background: #272823;
+
+    // h1 {
+    //   font-size: 20px;
+    //   line-height: 1;
+    //   font-weight: 500;
+
+    //   span {
+    //     font-size: 12px;
+    //     margin-left: 8px;
+    //     color: #84494988;
+    //   }
+
+    //   svg {
+    //     margin-right: 6px;
+    //     width: 20px;
+    //     height: 20px;
+    //   }
+    // }
+
+    button {
+      background: none;
+      border: none;
+      font-size: 20px;
+      padding: 8px;
+      color: var(--danger-color);
+      cursor: pointer;
+      &.toggle-plaintext-mode {
+        margin-left: auto;
+      }
     }
   }
 </style>

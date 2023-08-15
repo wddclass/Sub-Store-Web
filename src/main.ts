@@ -2,7 +2,6 @@ import '@/assets/styles/fonts.scss';
 import '@/assets/styles/global.scss';
 import '@/assets/styles/overwritten_css_var.scss';
 // import VConsole from 'vconsole';
-//
 // const vConsole = new VConsole();
 import SvgIcon from '@/components/SvgIcon.vue';
 import i18n from '@/locales';
@@ -19,16 +18,15 @@ import { createApp } from 'vue';
 
 import App from './App.vue';
 
-const pinia = createPinia();
-const app = createApp(App);
+export function initializeApp() {
+  const pinia = createPinia();
+  const app = createApp(App);
 
-nutUi(app);
-
-app
-  .use(router)
-  .use(pinia)
-  .use(i18n)
-  .component('font-awesome-icon', FontAwesomeIcon)
-  .component('svg-icon', SvgIcon);
-
-app.mount('#app');
+  nutUi(app);
+  app.use(router);
+  app.use(pinia);
+  app.use(i18n);
+  app.component('font-awesome-icon', FontAwesomeIcon);
+  app.component('svg-icon', SvgIcon);
+  app.mount('#app');
+}

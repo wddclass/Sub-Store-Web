@@ -5,7 +5,9 @@ interface GlobalStoreState {
   bottomSafeArea: number;
   isDarkMode: boolean;
   env: ENV;
-  apiUrl: string;
+  isSimpleMode: boolean;
+  isLeftRight: boolean;
+  ishostApi: any;
 }
 
 interface ENV {
