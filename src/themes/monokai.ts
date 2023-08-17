@@ -15,6 +15,7 @@ export default {
     'background-color': '#19181a',
     'card-color': '#2c2a2e',
     'dialog-color': '#2c2a2e',
+    'filter-color': 'rgba(44, 42, 46, 0.5)',
 
     // 文字色
     'primary-text-color': '#fcf9f4',

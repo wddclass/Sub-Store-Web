@@ -33,6 +33,7 @@ export default {
     'compare-item-background-color': '#202020',
     'picker-mask-near-color': '#12121248',
     'picker-mask-far-color': '#121212',
+    'filter-color': 'rgba(32, 32, 32, 0.5)',
 
     // 文字色
     'primary-text-color': '#FFFFFFEE',

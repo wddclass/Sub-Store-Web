@@ -27,6 +27,7 @@ export default {
     'switch-close-background-color': '#00000012',
     'switch-active-background-color': '#478EF2',
     'compare-item-background-color': '#EEEEEE',
+    'filter-color': 'rgba(236, 231, 223, 0.5)',
 
     // 文字色
     'primary-text-color': '#443623',

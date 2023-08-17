@@ -448,10 +448,12 @@ const onClickRefresh = async () => {
 
   .sub-item-top-wrapper {
     display: flex;
+
     .sub-img-wrapper {
       display: flex;
       align-items: center;
     }
+
     .sub-item-content {
       flex: 1;
       line-height: 1.3;
@@ -537,15 +539,16 @@ const onClickRefresh = async () => {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: rgba(250, 250, 250, 0.5);
+    background: linear-gradient(to right, var(--filter-color) 0%, var(--filter-color) 90%);
     left: unset;
-    right: .75rem;
-    width: 75%;
+    right: 0;
+    width: calc(100% - 48px - 20px);
     height: 100%;
     top: 0;
-    -webkit-backdrop-filter: blur(.1875rem);
-    backdrop-filter: blur(.1875rem);
+    -webkit-backdrop-filter: blur(var(--tab-bar-blur));
+    backdrop-filter: blur(var(--tab-bar-blur));
     padding: 0 1.25rem;
+    border-radius: var(--item-card-radios);
 
     .custom-button {
       background-color: transparent;
@@ -565,7 +568,7 @@ const onClickRefresh = async () => {
   }
 
   .simple-mode-right-wrapper {
-    width: 80%;
+    width: calc(100% - 35px - 20px);
 
     .custom-button {
       svg {

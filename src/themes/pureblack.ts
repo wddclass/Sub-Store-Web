@@ -35,11 +35,11 @@ export default {
     'picker-mask-near-color': '#12121248',
     'picker-mask-far-color': '#121212',
     // nut-input nut-input-readonly nut-input-border nut-input-text
+    'filter-color': 'rgba(36, 36, 39, 0.5)',
     // 文字色
     'nut-input-readonly': '#bcbac1',
     'nut-input': '#bcbac1',
     'nut-input-text': '#bcbac1',
-
 
     'primary-text-color': '#bcbac1',
     'second-text-color': '#FFFFFFBB',
