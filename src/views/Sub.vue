@@ -28,13 +28,18 @@
     </div>
     <!--浮动按钮-->
     <Teleport to="body">
-      <div class="drag-btn-wrapper" v-if="hasSubs || hasCollections">
+      <div class="drag-btn-wrapper" v-if="(hasSubs || hasCollections) && !isSortMode">
         <nut-drag :attract="true" :boundary="{
           top: 56 + 8,
           left: 16,
           bottom: bottomSafeArea + 48 + 12 + 8,
           right: 16,
         }" :style="{ right: '16px', bottom: `${bottomSafeArea + 48 + 36}px` }">
+
+          <!-- 排序存储 -->
+          <!-- <div class="drag-btn sort" v-if="settingsStore.sortMode" @click="isSortMode = true">
+            <font-awesome-icon icon="fa-solid fa-sort" />
+          </div> -->
 
           <!-- 刷新 -->
           <div class="drag-btn refresh" @click="refresh">
@@ -56,22 +61,40 @@
       <div class="sticky-title-wrappers">
         <p class="list-title">{{ $t(`specificWord.singleSub`) }}</p>
       </div>
-      <ul>
-        <li v-for="sub in subs" :key="sub.name">
-          <SubListItem :sub="sub" type="sub" />
-        </li>
-      </ul>
+      <draggable v-model="subs" @input="sortSubs" @change="changeSubs" itemKey="name" :scroll-sensitivity="200"
+        :force-fallback="true" :scrollSpeed="8" :scroll="true" v-bind="{
+          animation: 200,
+          disabled: false,
+          delay: 200,
+          chosenClass: 'chosensub',
+          handle: 'div'
+        }">
+        <template #item="{ element }">
+          <div :key="element.name" class="drag-item" :class="{ 'chosensub-sort': isSortMode }">
+            <SubListItem :sub="element" type="sub" />
+          </div>
+        </template>
+      </draggable>
     </div>
 
     <div v-if="hasCollections" class="subs-list-wrapper">
       <div class="sticky-title-wrappers">
         <p class="list-title">{{ $t(`specificWord.collectionSub`) }}</p>
       </div>
-      <ul>
-        <li v-for="collection in collections" :key="collection.name">
-          <SubListItem :collection="collection" type="collection" />
-        </li>
-      </ul>
+      <draggable v-model="collections" @input="sortCollections" @change="changeCollections" itemKey="name"
+        :scroll-sensitivity="200" :force-fallback="true" :scrollSpeed="8" :scroll="true" v-bind="{
+          animation: 200,
+          disabled: false,
+          delay: 200,
+          chosenClass: 'chosensub',
+          handle: 'div'
+        }">
+        <template #item="{ element }">
+          <div :key="element.name" class="drag-item">
+            <SubListItem :collection="element" type="collection" />
+          </div>
+        </template>
+      </draggable>
     </div>
 
     <!--没有数据-->
@@ -101,16 +124,40 @@
         $t(`subPage.loadFailed.doc`) }}</span>
         <font-awesome-icon icon="fa-solid fa-arrow-up-right-from-square" /></a>
     </div>
+
+    <!-- 存储排序模式 -->
+    <!-- <Teleport to=".app-layout-wrapper"> -->
+    <transition name="el-fade-in-linear">
+      <div class="sort-mode-pupop" v-show="isSortMode">
+        <nut-button class="cancel-btn" plain type="info" size="small" @click="isSortMode = false">
+          <font-awesome-icon icon="fa-solid fa-ban" />
+          {{ $t(`myPage.btn.cancel`) }}
+        </nut-button>
+        <nut-button class="save-btn" type="primary" size="small">
+          <font-awesome-icon icon="fa-solid fa-floppy-disk" />
+          {{ $t(`myPage.btn.save`) }}
+        </nut-button>
+      </div>
+    </transition>
+    <!-- </Teleport> -->
   </div>
 </template>
 
 <script lang="ts" setup>
 import SubListItem from '@/components/SubListItem.vue';
 import { useGlobalStore } from '@/store/global';
+import { useSettingsStore } from '@/store/settings';
 import { useSubsStore } from '@/store/subs';
 import { initStores } from '@/utils/initApp';
 import { storeToRefs } from 'pinia';
 import { ref } from 'vue';
+import draggable from 'vuedraggable';
+
+import { useSubsApi } from '@/api/subs';
+const subsApi = useSubsApi();
+const settingsStore = useSettingsStore();
+
+const isSortMode = ref(false);
 
 const touchStartY = ref(null);
 const touchStartX = ref(null);
@@ -142,11 +189,33 @@ const globalStore = useGlobalStore();
 const { hasSubs, hasCollections, subs, collections } = storeToRefs(subsStore);
 const { isLoading, fetchResult, bottomSafeArea } = storeToRefs(globalStore);
 
+const sortSubsArr = ref([]);
+const originSubs = subs.value
 const refresh = () => {
   initStores(true, true, true);
 };
 
+const sortSubs = (newSub: any) => {
+  subs.value = newSub;
+};
+const changeSubs = async () => {
+  const changeSubsValue = JSON.parse(JSON.stringify(subs.value))
+  if (isSortMode.value) {
+    sortSubsArr.value = changeSubsValue;
+  } else {
+    await subsApi.sortSub('subs', JSON.parse(JSON.stringify(subs.value)));
+  }
+};
 
+
+const sortCollections = (newCollections: any) => {
+  collections.value = newCollections;
+};
+
+const changeCollections = async () => {
+  await subsApi.sortSub('collections', JSON.parse(JSON.stringify(collections.value)));
+  // showNotify({ title: '6666' });
+};
 </script>
 
 <style lang="scss">
@@ -168,7 +237,10 @@ const refresh = () => {
 
     &.refresh {
       background: var(--second-color);
-      margin-bottom: 12px;
+    }
+
+    &.sort {
+      background: var(--third-color);
     }
 
     >svg {
@@ -176,6 +248,10 @@ const refresh = () => {
       height: 20px;
       color: #fffb;
     }
+  }
+
+  .drag-btn+.drag-btn {
+    margin-top: 12px;
   }
 }
 
@@ -222,27 +298,16 @@ const refresh = () => {
 }
 
 .subs-list-wrapper {
-
-  margin-bottom: 36px;
+  margin-bottom: 16px;
   position: relative;
+  overflow: hidden;
+  padding-bottom: 5px;
 
-
-
-  &>ul {
-    margin: 8px 0;
-    overflow: hidden;
-
-    >li:not(:last-child) {
-      margin-bottom: 12px;
-    }
-  }
-
-  &:last-child {
-    &>ul {
-      padding-bottom: 110px;
-    }
+  &:nth-child(3) {
+    margin-bottom: 130px;
   }
 }
+
 
 .no-data-wrapper {
   width: 100%;
@@ -282,6 +347,7 @@ const refresh = () => {
 
 .sticky-title-wrappers {
   margin-top: var(--safe-area-side);
+  margin-bottom: 12px;
   // backdrop-filter: blur(var(--sticky-title-blur));
   // -webkit-backdrop-filter: blur(var(--sticky-title-blur));
   color: var(--comment-text-color);
@@ -309,5 +375,36 @@ const refresh = () => {
 .desc-about a {
   color: var(--primary-color);
 
+}
+
+.drag-item:not(:last-child) {
+  margin-bottom: 12px;
+}
+
+.chosensub {
+  .sub-item-wrapper {
+    box-shadow: 0 0 1px 1px var(--primary-color) !important;
+  }
+}
+
+.chosensub-sort {
+  .sub-item-wrapper {
+    box-shadow: 0 0 1px 1px rgba(48, 110, 255, 0.15);
+  }
+}
+
+.sort-mode-pupop {
+  position: fixed;
+  bottom: calc(60px + 40px + env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+
+  .nut-button--plain {
+    background: white;
+  }
+
+  .nut-button+.nut-button {
+    margin-left: 12px;
+  }
 }
 </style>

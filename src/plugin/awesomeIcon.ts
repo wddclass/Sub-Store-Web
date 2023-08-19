@@ -29,7 +29,8 @@ import {
   faICursor,
   faCircleHalfStroke,
   faRotateRight,
-  faXmark
+  faXmark,
+  faSort
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(faToggleOn);
@@ -61,3 +62,4 @@ library.add(faICursor);
 library.add(faCircleHalfStroke);
 library.add(faRotateRight);
 library.add(faXmark);
+library.add(faSort);

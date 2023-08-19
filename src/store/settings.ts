@@ -24,6 +24,7 @@ export const useSettingsStore = defineStore('settingsStore', {
       avatarUrl: '',
       artifactStore: '',
       autoDownloadGistSync: false,
+      sortMode: localStorage.getItem('sortMode') === 'on',
       // ishostApi: localStorage.getItem('hostApi'),
     };
   },
@@ -44,13 +45,13 @@ export const useSettingsStore = defineStore('settingsStore', {
         this.theme.light = res.data.theme?.light ?? 'light';
         let ressss = res.data.autoDownloadGistSync ?? false;
         if (ressss) {
-          console.log("启动时自动下载 Gist 成功");
-            const syncRes = await settingsApi.syncSettings('download');
-            if (syncRes.data.status === 'success') {
-              console.log('自动下载 Gist 成功');
-              const subsStore = useSubsStore();
-              await subsStore.fetchSubsData();
-            }
+          console.log('启动时自动下载 Gist 成功');
+          const syncRes = await settingsApi.syncSettings('download');
+          if (syncRes.data.status === 'success') {
+            console.log('自动下载 Gist 成功');
+            const subsStore = useSubsStore();
+            await subsStore.fetchSubsData();
+          }
         }
         this.autoDownloadGistSync = ressss;
       }
@@ -74,9 +75,20 @@ export const useSettingsStore = defineStore('settingsStore', {
       }
       Toast.hide('theme__loading');
     },
+    async changeSort(sortMode: Boolean) {
+      if (sortMode) {
+        localStorage.setItem('sortMode', 'on');
+      } else {
+        localStorage.removeItem('sortMode');
+      }
+      this.sortMode = sortMode;
+    },
     async changeAutoDownloadGist(data: SettingsPostData) {
       const { showNotify } = useAppNotifyStore();
-      Toast.loading('同步 Gist Config 配置中...', { cover: true, id: 'isAutoDownloadGistSync__loading' });
+      Toast.loading('同步 Gist Config 配置中...', {
+        cover: true,
+        id: 'isAutoDownloadGistSync__loading',
+      });
       const { data: res } = await settingsApi.setSettings(data);
       if (res.status === 'success') {
         let tfvalue = res.data.autoDownloadGistSync;
@@ -99,5 +111,4 @@ export const useSettingsStore = defineStore('settingsStore', {
       }
     },
   },
-  
 });

@@ -57,3 +57,29 @@ img {
   font-weight: bold;
   line-height: 2;
 }
+
+.el-fade-in-enter,
+.el-fade-in-leave-active,
+.el-fade-in-linear-enter,
+.el-fade-in-linear-leave,
+.el-fade-in-linear-leave-active,
+.fade-in-linear-enter,
+.fade-in-linear-leave,
+.fade-in-linear-leave-active {
+  opacity: 0;
+}
+.fade-in-linear-enter-active,
+.fade-in-linear-leave-active {
+  -webkit-transition: opacity 0.2s linear;
+  transition: opacity 0.2s linear;
+}
+.el-fade-in-linear-enter-active,
+.el-fade-in-linear-leave-active {
+  -webkit-transition: opacity 0.2s linear;
+  transition: opacity 0.2s linear;
+}
+.el-fade-in-enter-active,
+.el-fade-in-leave-active {
+  -webkit-transition: all 0.3s cubic-bezier(0.55, 0, 0.1, 1);
+  transition: all 0.3s cubic-bezier(0.55, 0, 0.1, 1);
+}

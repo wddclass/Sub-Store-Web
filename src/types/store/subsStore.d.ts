@@ -58,4 +58,14 @@ interface Flow {
   };
 }
 
+interface Artifacts {
+  name: string;
+  displayName?: string;
+  type: string;
+  source: string;
+  platform: string;
+  sync: boolean;
+  updated: number;
+  url: string;
+}
 type GetOne<T extends Sub | Collection> = (name: string) => T;

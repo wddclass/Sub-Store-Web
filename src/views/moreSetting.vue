@@ -20,6 +20,14 @@
       </template>
     </nut-cell> -->
 
+    <!-- <nut-cell :title="$t(`themeSettingPage.sortMode`)" class="cell-item">
+      <template v-slot:link>
+        <nut-switch class="my-switch" v-model="sortSwitch" size="mini" @change="sortSwitchIsChange" />
+      </template>
+    </nut-cell>
+    <p class="desc-title">
+      开启存储排序模式后，点击 <font-awesome-icon icon="fa-solid fa-sort" /> 多个订阅排序后保存一并同步
+    </p> -->
     <nut-cell :title="$t(`themeSettingPage.auto`)" class="cell-item">
       <template v-slot:link>
         <nut-switch class="my-switch" v-model="autoSwitch" size="mini" @change="autoSwitchIsChange" />
@@ -169,7 +177,7 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 const settingsStore = useSettingsStore();
 const { changeAutoDownloadGist } = settingsStore;
-const { autoDownloadGistSync } = storeToRefs(settingsStore);
+const { autoDownloadGistSync, sortMode } = storeToRefs(settingsStore);
 const globalStore = useGlobalStore();
 const { env, isSimpleMode, isLeftRight, ishostApi } = storeToRefs(globalStore);
 
@@ -185,6 +193,8 @@ const autoSwitch = ref(false);
 const showThemePicker = ref(false);
 const isEditLoading = ref(false);
 
+const sortSwitch = ref(false);
+
 const setSimpleMode = (isSimpleMode: boolean) => {
   globalStore.setSimpleMode(isSimpleMode);
 };
@@ -199,7 +209,7 @@ const SwitchSyncIsChange = (val: boolean) => {
 };
 
 const { changeTheme } = settingsStore;
-const { theme, } = storeToRefs(settingsStore);
+const { theme } = storeToRefs(settingsStore);
 const { pickerList, pickerLightList, pickerDarkList, isAuto } = useThemes();
 useMousePicker();
 const selectedValue = ref(['dark']);
@@ -244,6 +254,10 @@ const autoSwitchIsChange = (val: boolean) => {
   changeTheme({ theme: data });
 };
 
+const sortSwitchIsChange = (val: boolean) => {
+  settingsStore.changeSort(val);
+};
+
 const setDisplayInfo = () => {
   InputHostApi.value = ishostApi.value
     ? ishostApi.value.slice(0, 9) + '************'
@@ -271,6 +285,7 @@ const toggleEditMode = async () => {
 
 watchEffect(() => {
   SimpleSwitch.value = isSimpleMode.value;
+  sortSwitch.value = sortMode.value;
   LeftRight.value = isLeftRight.value;
   autoSwitchSync.value = autoDownloadGistSync.value;
   autoSwitch.value = isAuto();

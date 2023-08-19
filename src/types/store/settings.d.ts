@@ -17,6 +17,7 @@ interface SettingsPostData {
     light: CustomTheme;
   };
   autoDownloadGistSync?: boolean;
+  sortMode?: boolean;
 }
 
 type CustomTheme = 'light' | 'dark';

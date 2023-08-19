@@ -493,6 +493,7 @@ export default {
       cancel: '取消',
       confirm: '确定',
     },
+    sortMode: '存储排序模式'
   },
   moreSettingPage: {
     moreSettingTitle: '更多设置',
