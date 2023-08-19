@@ -25,6 +25,11 @@
           <input class="nut-input-text" v-model.trim="form.displayName" :placeholder="$t(`editorPage.subConfig.basic.displayName.placeholder`)
             " type="text" />
         </nut-form-item>
+        <!-- label -->
+        <nut-form-item :label="$t(`editorPage.subConfig.basic.labelName.label`)" prop="label">
+          <input class="nut-input-text" v-model.trim="form.label" :placeholder="$t(`editorPage.subConfig.basic.labelName.placeholder`)
+            " type="text" />
+        </nut-form-item>
         <!-- icon -->
         <nut-form-item :label="$t(`editorPage.subConfig.basic.icon.label`)" prop="icon">
           <input class="nut-input-text" v-model.trim="form.icon"
@@ -180,6 +185,7 @@ const actionsList = reactive([]);
 const form = reactive<any>({
   name: '',
   displayName: '',
+  label: '',
   icon: '',
   process: [
     {
@@ -216,6 +222,7 @@ watchEffect(() => {
   const newProcess = JSON.parse(JSON.stringify(sourceData.process));
   form.name = sourceData.name;
   form.displayName = sourceData.displayName || sourceData['display-name'];
+  form.label = sourceData.label;
   form.icon = sourceData.icon;
   form.process = newProcess;
 

@@ -11,6 +11,13 @@ export const useSubsStore = defineStore('subsStore', {
   state: (): SubsStoreState => {
     return {
       subs: [],
+      subsGroup: [
+        {
+          label: '其他',
+          subs: [],
+        },
+      ],
+      subsGroupActive: [],
       collections: [],
       flows: {},
     };
@@ -32,6 +39,33 @@ export const useSubsStore = defineStore('subsStore', {
       Promise.all([subsApi.getSubs(), subsApi.getCollections()]).then(res => {
         if ('data' in res[0].data) {
           this.subs = res[0].data.data;
+          for (let i = 0; i < this.subs.length; i++) {
+            const element = this.subs[i];
+            if (
+              element.label &&
+              this.subsGroup.find(e => e.label === element.label)
+            ) {
+              this.subsGroup
+                .find(e => e.label === element.label)
+                .subs.push(element);
+            } else if (
+              element.label &&
+              !this.subsGroup.find(e => e.label === element.label)
+            ) {
+              this.subsGroup.push({
+                label: element.label,
+                subs: [element],
+              });
+            } else {
+              this.subsGroup[0].subs.push(element);
+            }
+          }
+          const other = this.subsGroup.filter(item => item.label === '其他');
+          const rest = this.subsGroup.filter(item => item.label !== '其他');
+          this.subsGroup = rest.concat(other);
+          for (let i = 0; i < this.subsGroup.length; i++) {
+            this.subsGroupActive.push(i);
+          }
         }
         if ('data' in res[1].data) {
           this.collections = res[1].data.data;

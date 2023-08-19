@@ -61,20 +61,24 @@
       <div class="sticky-title-wrappers">
         <p class="list-title">{{ $t(`specificWord.singleSub`) }}</p>
       </div>
-      <draggable v-model="subs" @input="sortSubs" @change="changeSubs" itemKey="name" :scroll-sensitivity="200"
-        :force-fallback="true" :scrollSpeed="8" :scroll="true" v-bind="{
-          animation: 200,
-          disabled: false,
-          delay: 200,
-          chosenClass: 'chosensub',
-          handle: 'div'
-        }">
-        <template #item="{ element }">
-          <div :key="element.name" class="drag-item" :class="{ 'chosensub-sort': isSortMode }">
-            <SubListItem :sub="element" type="sub" />
-          </div>
-        </template>
-      </draggable>
+      <nut-collapse v-model:active="activeLabels" icon="down-arrow" @change="labelChange">
+        <nut-collapse-item :name="index" v-for="(item, index) in subsGroup" :key="item.label" :title="item.label">
+          <draggable v-model="item.subs" @input="sortSubs" @change="changeSubs" itemKey="name" :scroll-sensitivity="200"
+            :force-fallback="true" :scrollSpeed="8" :scroll="true" v-bind="{
+              animation: 200,
+              disabled: false,
+              delay: 200,
+              chosenClass: 'chosensub',
+              handle: 'div'
+            }">
+            <template #item="{ element }">
+              <div :key="element.name" class="drag-item">
+                <SubListItem :sub="element" type="sub" />
+              </div>
+            </template>
+          </draggable>
+        </nut-collapse-item>
+      </nut-collapse>
     </div>
 
     <div v-if="hasCollections" class="subs-list-wrapper">
@@ -150,7 +154,7 @@ import { useSettingsStore } from '@/store/settings';
 import { useSubsStore } from '@/store/subs';
 import { initStores } from '@/utils/initApp';
 import { storeToRefs } from 'pinia';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import draggable from 'vuedraggable';
 
 import { useSubsApi } from '@/api/subs';
@@ -161,6 +165,7 @@ const isSortMode = ref(false);
 
 const touchStartY = ref(null);
 const touchStartX = ref(null);
+
 
 const onTouchStart = (event: TouchEvent) => {
   touchStartY.value = Math.abs(event.touches[0].clientY);
@@ -186,9 +191,11 @@ const onTouchEnd = () => {
 const addSubBtnIsVisible = ref(false);
 const subsStore = useSubsStore();
 const globalStore = useGlobalStore();
-const { hasSubs, hasCollections, subs, collections } = storeToRefs(subsStore);
+const { hasSubs, hasCollections, subs, collections, subsGroup, subsGroupActive } = storeToRefs(subsStore);
 const { isLoading, fetchResult, bottomSafeArea } = storeToRefs(globalStore);
 
+const activeLabels = ref(subsGroupActive);
+const labelChange = () => { };
 const sortSubsArr = ref([]);
 const originSubs = subs.value
 const refresh = () => {
@@ -216,6 +223,12 @@ const changeCollections = async () => {
   await subsApi.sortSub('collections', JSON.parse(JSON.stringify(collections.value)));
   // showNotify({ title: '6666' });
 };
+
+import json from './subs.json'
+
+onMounted(() => {
+  console.log(subsGroup.value)
+});
 </script>
 
 <style lang="scss">
@@ -406,5 +419,23 @@ const changeCollections = async () => {
   .nut-button+.nut-button {
     margin-left: 12px;
   }
+}
+
+.collapse-item {
+  background: var(--background-color) !important;
+  padding: 8px 0 8px 27px !important;
+
+  &::after {
+    border-bottom: 0 !important;
+  }
+}
+
+.collapse-icon-title {
+  color: var(--comment-text-color) !important;
+}
+
+.collapse-content {
+  background: var(--background-color) !important;
+  padding: 12px 0 !important;
 }
 </style>

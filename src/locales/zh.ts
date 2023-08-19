@@ -156,6 +156,10 @@ export default {
           label: '显示名称',
           placeholder: '输入展示的订阅名称',
         },
+        labelName: {
+          label: '标签',
+          placeholder: '输入标签',
+        },
         source: {
           label: '来源',
           remote: '远程订阅',

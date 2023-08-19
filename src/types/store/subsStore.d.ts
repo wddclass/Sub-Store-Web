@@ -1,5 +1,7 @@
 interface SubsStoreState {
   subs: Sub[];
+  subsGroup: subsGroup[];
+  subsGroupActive: Array;
   collections: Collection[];
   flows: FlowsDict;
 }
@@ -36,6 +38,11 @@ interface Sub {
   ua?: string;
   process: Process[];
   loading: boolean;
+  label?: string;
+}
+interface subsGroup {
+  label?: string;
+  subs: Array;
 }
 
 interface Collection {

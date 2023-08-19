@@ -1,0 +1,1743 @@
+{
+  "subs": [
+    {
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "ENABLED",
+            "scert": "ENABLED",
+            "tfo": "ENABLED",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "73685149.37798455"
+        }
+      ],
+      "name": "S0-CatFall",
+      "displayName": "",
+      "source": "remote",
+      "url": "https://fall.wddint.eu.org/?3",
+      "content": "",
+      "ua": "",
+      "icon": "https://g.wdd.space/https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/VIP.png",
+      "display-name": "",
+      "loading": false,
+      "label": "S0"
+    },
+    {
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "DEFAULT",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Regex Filter",
+          "args": {
+            "keep": false,
+            "regex": [
+              "印度|澳大利亚|南非|智利|巴西|法国|俄罗斯|德国|英国|荷兰|土耳其|加拿大"
+            ]
+          },
+          "id": "20336272.911294717"
+        },
+        {
+          "type": "Regex Rename Operator",
+          "args": [{ "expr": "Free", "now": "" }],
+          "id": "83877504.05268322"
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://g.wdd.space/https://raw.githubusercontent.com/qwerzl/rename.js/main/rename.js#output=enShort&airport=Free",
+            "mode": "link"
+          },
+          "id": "57945686.78291261"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "95124109.58167359"
+        }
+      ],
+      "name": "S0-FreeZero",
+      "displayName": "",
+      "source": "remote",
+      "url": "https://zero.76898102.xyz/link/TUmU1Sc5pSpR3jCR?clash=1",
+      "content": "",
+      "ua": "",
+      "icon": "https://g.wdd.space/https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Server.png",
+      "display-name": "",
+      "loading": false,
+      "label": "S0"
+    },
+    {
+      "name": "S0-iKuuu",
+      "displayName": "",
+      "icon": "https://g.wdd.space/https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Server.png",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "DEFAULT",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Regex Rename Operator",
+          "args": [
+            { "expr": "免费-", "now": "" },
+            { "expr": "-替代", "now": "" },
+            { "expr": "替代", "now": "" },
+            { "expr": "Ver.4", "now": "" },
+            { "expr": "-", "now": "" }
+          ],
+          "id": "29309276.421502773"
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://g.wdd.space/https://raw.githubusercontent.com/Keywos/rule/main/rename.js#nx&one&clear&in&out&name=iKu",
+            "mode": "link"
+          },
+          "id": "43767527.83412"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "85538496.21051243"
+        }
+      ],
+      "source": "remote",
+      "url": "https://api.sub-300.club/link/kKQsKXvZJly3fgDT?clash=3&extend=1",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "loading": false,
+      "label": "S0"
+    },
+    {
+      "name": "S0-Mojie-ASIA",
+      "displayName": "",
+      "icon": "https://g.wdd.space/https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Server.png",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "DEFAULT",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Region Filter",
+          "args": ["HK", "JP", "SG"],
+          "id": "10734465.688773487"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "49281255.49176321"
+        },
+        { "type": "Sort Operator", "args": "asc", "id": "85549334.45516513" }
+      ],
+      "source": "remote",
+      "url": "https://mojie.nl/api/v1/client/subscribe?token=1fa3b9583f02c891a3a1b928f74381f3",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "label": "S0"
+    },
+    {
+      "name": "S0-NanoPort",
+      "displayName": "",
+      "icon": "https://g.wdd.space/https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Lab.png",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "DEFAULT",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Regex Filter",
+          "args": {
+            "keep": false,
+            "regex": ["官网", "群组", "20x", "30x", "50x", "-IP"]
+          },
+          "id": "53719034.31016519"
+        },
+        {
+          "type": "Regex Rename Operator",
+          "args": [
+            {
+              "expr": "(咖喱三宝|丝袜奶茶|芒果凉粉|忌廉鲜奶|沙爹串烧|辣椒螃蟹|咖喱鱼头|草莓大福|起司泡芙|大龙虾|海南鸡饭|乌龙面|酱油拉面|牛肉盖饭)",
+              "now": ""
+            }
+          ],
+          "id": "67519225.44075866"
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://g.wdd.space/https://raw.githubusercontent.com/Keywos/rule/main/rename.js#bl&one&clear&in&out=us&name=Nano",
+            "mode": "link"
+          },
+          "id": "71908851.18870081"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "85948024.98313828"
+        },
+        {
+          "type": "Regex Sort Operator",
+          "args": ["JP"],
+          "id": "13696530.473345691"
+        }
+      ],
+      "source": "remote",
+      "url": "https://subv5.nanoport.xyz/api/v1/client/subscribe?token=9cdd07bebeb07b1411d9a9cd1f440aba",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "loading": false,
+      "label": "S0"
+    },
+    {
+      "name": "S0-PC",
+      "displayName": "",
+      "icon": "https://g.wdd.space/https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Server.png",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "DEFAULT",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Regex Rename Operator",
+          "args": [
+            { "expr": " 中国移动网优化 \\\\| 允许长期跑满带宽-", "now": " " },
+            { "expr": "FR \\\\| BT、PT专用｜", "now": "" },
+            { "expr": "\\\\|BT，PT专用，允许长期跑满带宽-", "now": " | " },
+            { "expr": "2号节点", "now": "2" },
+            { "expr": "允许长期跑满带宽-", "now": "" },
+            { "expr": "倍率", "now": "x" },
+            { "expr": "凤凰城", "now": "" },
+            { "expr": "号", "now": "" },
+            { "expr": "专线", "now": "" },
+            { "expr": "AWS", "now": "" },
+            { "expr": "中国移动网优化-", "now": "" },
+            { "expr": "\\\\|", "now": "" },
+            { "expr": "三网低延迟", "now": "" }
+          ],
+          "id": "62672011.95046128"
+        },
+        {
+          "type": "Regex Filter",
+          "args": {
+            "keep": false,
+            "regex": [
+              "套餐",
+              "距离",
+              "流量",
+              "德国",
+              "免流",
+              "土耳其",
+              "日本",
+              "新加坡"
+            ]
+          },
+          "id": "68427916.67015693"
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://g.wdd.space/https://raw.githubusercontent.com/Keywos/rule/main/rename.js#bl&blpx&clear&out&name=PC",
+            "mode": "link"
+          },
+          "id": "74778178.97919159"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "71366600.7974144"
+        }
+      ],
+      "source": "remote",
+      "url": "https://pqjc.site/api/v1/client/subscribe?token=ab4816b7832ff51526c040cc32d38eeb",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "loading": false,
+      "label": "S0"
+    },
+    {
+      "name": "S0-XSUS",
+      "displayName": "",
+      "icon": "https://g.wdd.space/https://raw.githubusercontent.com/Twoandz9/TheMagic-Icons/main/Icons/Xsus.png",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "ENABLED",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Region Filter",
+          "args": ["HK", "JP", "SG", "TW"],
+          "id": "3201124.936693578"
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://g.wdd.space/https://raw.githubusercontent.com/Keywos/rule/main/rename.js#nx&one&clear&in&out=us&name=X",
+            "mode": "link"
+          },
+          "id": "67026100.39102064"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "60554682.2078747"
+        },
+        {
+          "type": "Regex Sort Operator",
+          "args": ["JP", "SG", "HK"],
+          "id": "60241159.17713553"
+        }
+      ],
+      "source": "remote",
+      "url": "https://sub.xsus.io/api/v1/client/subscribe?token=895eaa08ec2f2e1ca727493e3d5f33c2",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "loading": false,
+      "label": "S0"
+    },
+    {
+      "name": "S1-ACA",
+      "displayName": "",
+      "icon": "",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "DEFAULT",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Regex Filter",
+          "args": {
+            "keep": false,
+            "regex": [
+              "8x",
+              "12x",
+              "10x",
+              "6x",
+              "4x",
+              "流量",
+              "距离",
+              "套餐",
+              "IPLC",
+              "UDPN"
+            ]
+          },
+          "id": "30765375.131823115"
+        },
+        {
+          "type": "Regex Filter",
+          "args": { "keep": true, "regex": ["0.1"] },
+          "id": "69580112.58648287"
+        }
+      ],
+      "source": "remote",
+      "url": "https://subacagroup.wddint.eu.org/njrXqks7pGckvY90hZf3H/substoreGet.php",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "label": "S1"
+    },
+    {
+      "name": "S1-ACA-EMBY",
+      "displayName": "",
+      "icon": "",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "ENABLED",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Regex Filter",
+          "args": {
+            "keep": false,
+            "regex": ["12x", "8x", "剩余", "IPLC", "距离", "套餐"]
+          },
+          "id": "49278376.68342463"
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://raw.githubusercontent.com/qwerzl/rename.js/main/rename.js#output=enShort&airport=ACA",
+            "mode": "link"
+          },
+          "id": "33699421.89313973"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "38539258.148251876"
+        },
+        {
+          "type": "Regex Rename Operator",
+          "args": [{ "expr": "0.1", "now": "Emby 0.1" }],
+          "id": "36744609.77910263"
+        }
+      ],
+      "source": "remote",
+      "url": "https://subacagroup.wddint.eu.org/njrXqks7pGckvY90hZf3H/substoreGet.php",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "label": "S1"
+    },
+    {
+      "name": "S1-SKNP",
+      "displayName": "",
+      "icon": "https://g.wdd.space/https://raw.githubusercontent.com/Twoandz9/TheMagic-Icons/main/Icons/SKNP.png",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "ENABLED",
+            "scert": "DEFAULT",
+            "tfo": "ENABLED",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Region Filter",
+          "args": ["TW", "JP", "SG", "HK"],
+          "id": "74428485.33407679"
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://g.wdd.space/https://raw.githubusercontent.com/Keywos/rule/main/rename.js#bl&one&clear&in&out=us&name=SKNP",
+            "mode": "link"
+          },
+          "id": "1910930.9912235695"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "83051721.33712487"
+        },
+        {
+          "type": "Regex Sort Operator",
+          "args": ["JP", "HK"],
+          "id": "52220311.50342594"
+        }
+      ],
+      "source": "remote",
+      "url": "https://sub-url.com/api?sid=5122&token=8304f809&app=clashxpro",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "label": "S1"
+    },
+    {
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "DEFAULT",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Region Filter",
+          "args": ["HK", "SG", "JP", "TW"],
+          "id": "17726194.524823714"
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://g.wdd.space/https://raw.githubusercontent.com/Keywos/rule/main/rename.js#nx&one&clear&in&out=us&name=SX",
+            "mode": "link"
+          },
+          "id": "62616172.78310352"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "7413809.491580392"
+        },
+        {
+          "type": "Regex Sort Operator",
+          "args": ["JP", "SG", "HK"],
+          "id": "97420625.02861679"
+        }
+      ],
+      "name": "S1-XSUS",
+      "displayName": "",
+      "source": "remote",
+      "url": "https://sub-xsus.com/api/v1/client/subscribe?token=d7323d76590e3fba2618125a406aa2e7",
+      "content": "",
+      "ua": "",
+      "icon": "https://g.wdd.space/https://raw.githubusercontent.com/Twoandz9/TheMagic-Icons/main/Icons/Xsus.png",
+      "display-name": "",
+      "label": "S1"
+    },
+    {
+      "name": "S2-Amy",
+      "displayName": "",
+      "icon": "",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "ENABLED",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://g.wdd.space/https://raw.githubusercontent.com/Keywos/rule/main/rename.js#bl&one&clear&in&out=us&name=Amy",
+            "mode": "link"
+          },
+          "id": "57497055.02533835"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "89233557.58761929"
+        },
+        {
+          "type": "Region Filter",
+          "args": ["HK", "SG", "JP"],
+          "id": "37805591.476791665"
+        }
+      ],
+      "source": "remote",
+      "url": "https://g.wdd.space/https://gist.githubusercontent.com/wddclass/db1182b7fdd6cdfbe549b74bc4e05096/raw/Amy",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "label": "S2"
+    },
+    {
+      "name": "S2-Bruceyunti",
+      "displayName": "",
+      "icon": "",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "ENABLED",
+            "scert": "DEFAULT",
+            "tfo": "ENABLED",
+            "vmess aead": "ENABLED"
+          }
+        },
+        {
+          "type": "Region Filter",
+          "args": ["HK", "SG", "TW", "JP"],
+          "id": "94352866.81536676"
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://g.wdd.space/https://raw.githubusercontent.com/Keywos/rule/main/rename.js#nx&one&clear&in&out&name=Bru",
+            "mode": "link"
+          },
+          "id": "82971442.52627213"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "41067293.8805847"
+        },
+        {
+          "type": "Regex Sort Operator",
+          "args": ["日本", "新加坡", "香港"],
+          "id": "30783116.236794595"
+        }
+      ],
+      "source": "remote",
+      "url": "https://v2.bruceyunti.net/api/v1/client/subscribe?token=93ea0c1d675ec685ca5184208df3eac8",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "label": "S2"
+    },
+    {
+      "name": "S2-EFC",
+      "displayName": "",
+      "icon": "",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "ENABLED",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Region Filter",
+          "args": ["HK", "SG", "JP"],
+          "id": "87243527.4863549"
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://g.wdd.space/https://raw.githubusercontent.com/Keywos/rule/main/rename.js#nx&one&clear&in&out&name=EFC",
+            "mode": "link"
+          },
+          "id": "36766683.96730093"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "75279526.67456858"
+        }
+      ],
+      "source": "remote",
+      "url": "https://v1.efshop.cc/api/v1/client/subscribe?token=43e548adb487c9e8ff855f4d6d983002",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "label": "S2"
+    },
+    {
+      "name": "S2-FC",
+      "displayName": "",
+      "icon": "",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "ENABLED",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://g.wdd.space/https://raw.githubusercontent.com/Keywos/rule/main/rename.js#bl&one&clear&in&out=us&name=FC",
+            "mode": "link"
+          },
+          "id": "96130361.8272364"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "39467259.21068911"
+        }
+      ],
+      "source": "remote",
+      "url": "https://g.wdd.space/https://gist.githubusercontent.com/wddclass/89ddd8c341a9ebd86f07e4890cd09f35/raw/Fc.conf",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "label": "S2"
+    },
+    {
+      "name": "S2-Flower",
+      "displayName": "",
+      "icon": "https://g.wdd.space/https://raw.githubusercontent.com/Twoandz9/TheMagic-Icons/main/Icons/Flowercloud.png",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "ENABLED",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://g.wdd.space/https://raw.githubusercontent.com/Keywos/rule/main/rename.js#nx&one&clear&in&out=us&name=Flower",
+            "mode": "link"
+          },
+          "id": "79153090.21888746"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "83526782.23942329"
+        },
+        {
+          "type": "Region Filter",
+          "args": ["HK", "SG", "US", "JP"],
+          "id": "66941267.06134766"
+        }
+      ],
+      "source": "remote",
+      "url": "https://api.flowercloud.xyz/osubscribe.php?sid=22270&token=PXDoWVYXX61m",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "label": "S2"
+    },
+    {
+      "name": "S2-Flower-Gist",
+      "displayName": "",
+      "icon": "https://g.wdd.space/https://raw.githubusercontent.com/Twoandz9/TheMagic-Icons/main/Icons/Flowercloud.png",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "ENABLED",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://g.wdd.space/https://raw.githubusercontent.com/Keywos/rule/main/rename.js#bl&one&clear&in&out&name=FlowerG",
+            "mode": "link"
+          },
+          "id": "79153090.21888746"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "83526782.23942329"
+        },
+        {
+          "type": "Region Filter",
+          "args": ["HK", "SG", "JP"],
+          "id": "75212787.09148507"
+        },
+        {
+          "type": "Regex Sort Operator",
+          "args": ["日本", "新加坡", "香港"],
+          "id": "3327943.2846752056"
+        }
+      ],
+      "source": "remote",
+      "url": "https://g.wdd.space/https://gist.githubusercontent.com/BaileyZyp/78a8a6dc29c24f68ee51d8fae1f6d5d1/raw/Surfboard",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "label": "S2"
+    },
+    {
+      "name": "S2-Lar",
+      "displayName": "",
+      "icon": "",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "ENABLED",
+            "scert": "DEFAULT",
+            "tfo": "ENABLED",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://g.wdd.space/https://raw.githubusercontent.com/Keywos/rule/main/rename.js#bl&one&clear&in&out&name=Lar",
+            "mode": "link"
+          },
+          "id": "84344766.00490066"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "82839375.65955848"
+        }
+      ],
+      "source": "remote",
+      "url": "https://sokkls.buzz/api/v1/client/subscribe?token=04276d30d5faeba8023851a4258aec11&flag=clash",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "label": "S2"
+    },
+    {
+      "name": "S2-Nexitally",
+      "displayName": "",
+      "icon": "https://g.wdd.space/https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Nexitally.png",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "ENABLED",
+            "scert": "DEFAULT",
+            "tfo": "ENABLED",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Region Filter",
+          "args": ["HK", "JP", "SG", "US"],
+          "id": "97864403.31766206"
+        },
+        {
+          "type": "Regex Filter",
+          "args": { "keep": false, "regex": ["Premium"] },
+          "id": "78778803.30470182"
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://g.wdd.space/https://raw.githubusercontent.com/Keywos/rule/main/rename.js#bl&one&clear&in&out=us&name=Naxitally",
+            "mode": "link"
+          },
+          "id": "72637786.9694534"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "55983695.95442434"
+        }
+      ],
+      "source": "remote",
+      "url": "https://vhsulv.xyz/?L2Rvd25sb2FkQ29uZmlnL1NoYWRvd1JvY2tldEltcG9ydFNlcnZpY2UuYXNweD90PXNzbiZ1cms9Y2Q0NmVlODUtZDg2Zi00YWVlLWEzZWYtMzc5NDZiYTFhNjU1Jm1tPTI1Njc5JjNiYzFiOQ==",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "label": "S2"
+    },
+    {
+      "name": "S2-Nexitally-HK",
+      "displayName": "",
+      "icon": "https://g.wdd.space/https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Nexitally.png",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "DEFAULT",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        { "type": "Region Filter", "args": ["HK"], "id": "11983438.15390912" },
+        {
+          "type": "Regex Filter",
+          "args": { "keep": false, "regex": ["Premium"] },
+          "id": "14152782.66860378"
+        }
+      ],
+      "source": "remote",
+      "url": "https://vhsulv.xyz/?L2Rvd25sb2FkQ29uZmlnL1NoYWRvd1JvY2tldEltcG9ydFNlcnZpY2UuYXNweD90PXNzbiZ1cms9Y2Q0NmVlODUtZDg2Zi00YWVlLWEzZWYtMzc5NDZiYTFhNjU1Jm1tPTI1Njc5JjNiYzFiOQ==",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "loading": false,
+      "label": "S2"
+    },
+    {
+      "name": "S2-Oralce-alban",
+      "displayName": "",
+      "icon": "",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "DEFAULT",
+            "vmess aead": "DEFAULT"
+          }
+        }
+      ],
+      "source": "remote",
+      "url": "https://g.wdd.space/https://gist.githubusercontent.com/Daryush777/b0e6f16b94416f068147bf6e8b2d4a95/raw/ziyong.list",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "label": "S2"
+    },
+    {
+      "name": "S2-Kuromis",
+      "displayName": "",
+      "icon": "",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "ENABLED",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://g.wdd.space/https://raw.githubusercontent.com/Keywos/rule/main/rename.js#bl&one&clear&in&out=us&name=Kuromis",
+            "mode": "link"
+          },
+          "id": "16169348.835904773"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "31521936.10373698"
+        }
+      ],
+      "source": "remote",
+      "url": "https://kuromisubs.shop/tEvO4-uTP1LTaY_ZvIp17?type=surge&protocol=shadowsocks&rule=nodelist",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "label": "S2"
+    },
+    {
+      "name": "S2-SpeedCat",
+      "displayName": "",
+      "icon": "",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "ENABLED",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://g.wdd.space/https://raw.githubusercontent.com/Keywos/rule/main/rename.js#bl&one&clear&in&out=us&name=SpeedCat",
+            "mode": "link"
+          },
+          "id": "89014281.56980444"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "89147919.03450677"
+        },
+        {
+          "type": "Regex Sort Operator",
+          "args": ["HK", "JP", "SG"],
+          "id": "55911793.405655675"
+        }
+      ],
+      "source": "remote",
+      "url": "https://api.nexconvert.com/sub?target=clash&url=https%3A%2F%2Fapiv2.pptiok2020.com%2Fapiv2%2Fqm19et4asrfeijzk%3Fsub%3D2%26extend%3D1&insert=false&config=https%3A%2F%2Fcache.wddzzz.top%2Fclash%2Fconfig%2FACL4SSR_Online_Mini_AdblockPlus.ini&emoji=true&list=true&tfo=false&scv=true&fdn=false&sort=false&new_name=true",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "label": "S2"
+    },
+    {
+      "name": "S2-PPDog",
+      "displayName": "",
+      "icon": "",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "DEFAULT",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Region Filter",
+          "args": ["HK", "SG", "TW", "JP", "US"],
+          "id": "97547696.50859681"
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://g.wdd.space/https://raw.githubusercontent.com/Keywos/rule/main/rename.js#bl&one&clear&in&out=us&name=PPDog",
+            "mode": "link"
+          },
+          "id": "65641553.8962031"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "95905744.38795842"
+        }
+      ],
+      "source": "remote",
+      "url": "https://v1.dogapi.yachts/api/v1/client/subscribe?token=cf1baab530080ff691c5d12e4307fdbe",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "label": "S2"
+    },
+    {
+      "name": "S2-CreamData",
+      "displayName": "",
+      "icon": "",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "ENABLED",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://g.wdd.space/https://raw.githubusercontent.com/Keywos/rule/main/rename.js#bl&one&clear&in&out=us&name=CreamData",
+            "mode": "link"
+          },
+          "id": "50398969.82303489"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "35590694.267793335"
+        },
+        {
+          "type": "Regex Sort Operator",
+          "args": ["HK", "JP", "SG"],
+          "id": "28473996.388510726"
+        }
+      ],
+      "source": "remote",
+      "url": "https://paste.gg/p/anonymous/baf9c361ecce4e329593c8a974cbeeb7/files/0a0272eedf964e29a9a552478b130e3a/raw",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "label": "S2"
+    },
+    {
+      "name": "S2-Texon",
+      "displayName": "",
+      "icon": "",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "ENABLED",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Region Filter",
+          "args": ["JP", "TW", "HK", "SG"],
+          "id": "3719757.7301891325"
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://g.wdd.space/https://raw.githubusercontent.com/Keywos/rule/main/rename.js#bl&one&clear&in&out=us&name=Texon",
+            "mode": "link"
+          },
+          "id": "50398969.82303489"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "35590694.267793335"
+        }
+      ],
+      "source": "remote",
+      "url": "https://substore.wdd.space/YDuuqxOEgccR0xq04p2op/download/S2-CreamData",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "label": "S2"
+    },
+    {
+      "name": "S0-XSNet",
+      "displayName": "",
+      "icon": "https://g.wdd.space/https://raw.githubusercontent.com/Twoandz9/TheMagic-Icons/main/Icons/Xsus.png",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "ENABLED",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://g.wdd.space/https://raw.githubusercontent.com/Keywos/rule/main/rename.js#nx&one&clear&in&out=us&name=XSNet",
+            "mode": "link"
+          },
+          "id": "67026100.39102064"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "60554682.2078747"
+        },
+        {
+          "type": "Regex Sort Operator",
+          "args": ["JP", "SG", "HK"],
+          "id": "60241159.17713553"
+        }
+      ],
+      "source": "remote",
+      "url": "https://sub.xsvpn.link/api/v1/client/subscribe?token=8902679d76b90b7712dc9a0e7e31d222",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "loading": false,
+      "label": "S0"
+    },
+    {
+      "name": "S2-Ddgksf",
+      "displayName": "",
+      "icon": "",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "ENABLED",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://g.wdd.space/https://raw.githubusercontent.com/Keywos/rule/main/rename.js#bl&one&clear&in&out=us&name=Ddgksf",
+            "mode": "link"
+          },
+          "id": "72271851.786702"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "74603547.25835949"
+        },
+        {
+          "type": "Region Filter",
+          "args": ["HK", "SG", "JP"],
+          "id": "21099235.95483092"
+        }
+      ],
+      "source": "remote",
+      "url": "https://g.wdd.space/https://gist.githubusercontent.com/ddgksf2013/ae9e33a417dc24c35e473f8f77eca680/raw/ddgksf2013",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "label": "S2"
+    },
+    {
+      "name": "S1-MagicSchool-Origin",
+      "displayName": "",
+      "icon": "",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "DEFAULT",
+            "vmess aead": "DEFAULT"
+          }
+        }
+      ],
+      "source": "remote",
+      "url": "https://magicschool.wdd.space/njrXqks7pGckvY90hZf3H/substoreGet.php",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "label": "S1"
+    },
+    {
+      "name": "S1-MagicSchool",
+      "displayName": "",
+      "icon": "https://g.wdd.space/https://raw.githubusercontent.com/Twoandz9/TheMagic-Icons/main/Icons/Mofaxueyuan.png",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "DEFAULT",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://g.wdd.space/https://raw.githubusercontent.com/qwerzl/rename.js/main/rename.js#output=enShort&airport=MS",
+            "mode": "link"
+          },
+          "id": "67026100.39102064"
+        },
+        {
+          "type": "Regex Filter",
+          "args": {
+            "keep": false,
+            "regex": [
+              "Total|Expire|网址|版本",
+              "AR|CA|TR|DE|UK|PK|RU|AU|MY|TH|VN|TW"
+            ]
+          },
+          "id": "15781049.660474068"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "60554682.2078747"
+        }
+      ],
+      "source": "remote",
+      "url": "https://magicschool.wdd.space/njrXqks7pGckvY90hZf3H/substoreGet.php",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "loading": false,
+      "label": "S1"
+    },
+    {
+      "name": "S0-XJB",
+      "displayName": "",
+      "icon": "",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "DEFAULT",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://g.wdd.space/https://raw.githubusercontent.com/Keywos/rule/main/rename.js#nx&one&clear&in&out=us&name=XJB",
+            "mode": "link"
+          },
+          "id": "98113497.78777358"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "47932697.66687733"
+        },
+        {
+          "type": "Region Filter",
+          "args": ["HK", "SG", "US", "JP", "TW"],
+          "id": "56883490.83101209"
+        }
+      ],
+      "source": "remote",
+      "url": "https://1.xn--xc3ao8r.top/api/v1/client/subscribe?token=9f9e8d8c2a0082a0522e5333df27b0d8",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "label": "S0"
+    },
+    {
+      "name": "S2-Oralce-ddgksf2013",
+      "displayName": "",
+      "icon": "",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "DEFAULT",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Regex Delete Operator",
+          "args": ["香港"],
+          "id": "59789316.13907046"
+        }
+      ],
+      "source": "remote",
+      "url": "https://g.wdd.space/https://gist.githubusercontent.com/ddgksf2013/5f2bcc1b5487d12c304587673307985f/raw/Oracle",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "label": "S2"
+    },
+    {
+      "name": "S2-Imm",
+      "displayName": "",
+      "icon": "https://g.wdd.space/https://raw.githubusercontent.com/Twoandz9/TheMagic-Icons/main/Icons/IMM.png",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "DEFAULT",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://g.wdd.space/https://raw.githubusercontent.com/Keywos/rule/main/rename.js#bl&one&clear&in&out=us&name=Imm",
+            "mode": "link"
+          },
+          "id": "67026100.39102064"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "60554682.2078747"
+        }
+      ],
+      "source": "remote",
+      "url": "https://g.wdd.space/https://gist.githubusercontent.com/wddclass/db1182b7fdd6cdfbe549b74bc4e05096/raw/Imm",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "loading": false,
+      "label": "S2"
+    },
+    {
+      "name": "S2-Magic",
+      "displayName": "",
+      "icon": "",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "DEFAULT",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://g.wdd.space/https://raw.githubusercontent.com/Keywos/rule/main/rename.js#bl&one&clear&in&out=us&name=Magic",
+            "mode": "link"
+          },
+          "id": "67026100.39102064"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "60554682.2078747"
+        },
+        {
+          "type": "Region Filter",
+          "args": ["HK", "SG", "US", "JP"],
+          "id": "76950815.89972892"
+        }
+      ],
+      "source": "remote",
+      "url": "https://mofayun.xyz/api/v1/client/subscribe?token=3cd7d8a3ecabaac48872485d94b12bcf",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "loading": false,
+      "label": "S2"
+    },
+    {
+      "name": "S3-Nexitally",
+      "displayName": "",
+      "icon": "https://g.wdd.space/https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Nexitally.png",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "ENABLED",
+            "scert": "DEFAULT",
+            "tfo": "ENABLED",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Region Filter",
+          "args": ["HK", "JP", "SG", "US"],
+          "id": "97864403.31766206"
+        },
+        {
+          "type": "Regex Filter",
+          "args": { "keep": false, "regex": ["Premium"] },
+          "id": "78778803.30470182"
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://g.wdd.space/https://raw.githubusercontent.com/Keywos/rule/main/rename.js#bl&one&clear&in&out=us&name=Naxitally3",
+            "mode": "link"
+          },
+          "id": "72637786.9694534"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "55983695.95442434"
+        }
+      ],
+      "source": "remote",
+      "url": "https://g.wdd.space/https://gist.githubusercontent.com/Xiayuno111/7fd01167103613a24ad0fdbb649ffdc1/raw/Nexitally",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "label": "S3"
+    },
+    {
+      "name": "S3-BYG",
+      "displayName": "",
+      "icon": "https://g.wdd.space/https://raw.githubusercontent.com/Twoandz9/TheMagic-Icons/main/Icons/BYG.png",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "ENABLED",
+            "scert": "DEFAULT",
+            "tfo": "ENABLED",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Region Filter",
+          "args": ["HK", "JP", "SG", "US"],
+          "id": "97864403.31766206"
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://g.wdd.space/https://raw.githubusercontent.com/Keywos/rule/main/rename.js#bl&one&clear&in&out=us&name=BYG3",
+            "mode": "link"
+          },
+          "id": "72637786.9694534"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "55983695.95442434"
+        }
+      ],
+      "source": "remote",
+      "url": "https://g.wdd.space/https://gist.githubusercontent.com/Xiayuno111/7fd01167103613a24ad0fdbb649ffdc1/raw/BYG",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "loading": false,
+      "label": "S3"
+    },
+    {
+      "name": "S3-GlobalCN",
+      "displayName": "",
+      "icon": "",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "DEFAULT",
+            "vmess aead": "DEFAULT"
+          }
+        }
+      ],
+      "source": "remote",
+      "url": "https://g.wdd.space/https://gist.githubusercontent.com/AntonyCyrus/8bc8582a2881ef79635004744f850a71/raw/CN_nodelist_for_Clash",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "label": "S3"
+    },
+    {
+      "name": "S3-Texon",
+      "displayName": "",
+      "icon": "https://g.wdd.space/https://raw.githubusercontent.com/Twoandz9/TheMagic-Icons/main/Icons/Texon1.png",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "ENABLED",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://g.wdd.space/https://raw.githubusercontent.com/qwerzl/rename.js/main/rename.js#output=enShort&airport=Texon",
+            "mode": "link"
+          },
+          "id": "96883297.72095244"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "72256292.6138097"
+        }
+      ],
+      "source": "remote",
+      "url": "https://g.wdd.space/https://gist.githubusercontent.com/AntonyCyrus/8bc8582a2881ef79635004744f850a71/raw/Texon_SS_nodelist_for_Clash",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "label": "S3"
+    },
+    {
+      "name": "S3-Flower",
+      "displayName": "",
+      "icon": "https://g.wdd.space/https://raw.githubusercontent.com/Twoandz9/TheMagic-Icons/main/Icons/Flowercloud.png",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "DEFAULT",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://g.wdd.space/https://raw.githubusercontent.com/Keywos/rule/main/rename.js#nx&one&clear&in&out=us&name=Flower3",
+            "mode": "link"
+          },
+          "id": "84219760.79242843"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "81003661.46483795"
+        }
+      ],
+      "source": "remote",
+      "url": "https://g.wdd.space/https://gist.githubusercontent.com/AntonyCyrus/8bc8582a2881ef79635004744f850a71/raw/Flower_nodelist_for_Clash",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "label": "S3"
+    },
+    {
+      "name": "S3-TAG",
+      "displayName": "",
+      "icon": "https://g.wdd.space/https://raw.githubusercontent.com/Twoandz9/TheMagic-Icons/main/Icons/Tag.png",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "DEFAULT",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Regex Rename Operator",
+          "args": [
+            { "expr": "^(.*)$", "now": "TAG $1" },
+            { "expr": "(.*)..$", "now": "$1" }
+          ],
+          "id": "38149126.75064077"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "60204793.33327189"
+        }
+      ],
+      "source": "remote",
+      "url": "https://g.wdd.space/https://gist.githubusercontent.com/AntonyCyrus/8bc8582a2881ef79635004744f850a71/raw/TAG_nodelist_for_Clash",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "label": "S3"
+    },
+    {
+      "name": "S3-CNIX",
+      "displayName": "",
+      "icon": "https://g.wdd.space/https://raw.githubusercontent.com/Twoandz9/TheMagic-Icons/main/Icons/Shutiao.png",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "DEFAULT",
+            "vmess aead": "DEFAULT"
+          }
+        }
+      ],
+      "source": "remote",
+      "url": "https://client.fhlsep.cn/api/v1/client/subscribe?token=0389d790a107a5e7b4857d3e11ee942b",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "label": "S3"
+    },
+    {
+      "name": "S3-YY",
+      "displayName": "",
+      "icon": "",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "DEFAULT",
+            "vmess aead": "DEFAULT"
+          }
+        }
+      ],
+      "source": "remote",
+      "url": "https://gist.githubusercontent.com/Xiayuno111/7fd01167103613a24ad0fdbb649ffdc1/raw/YY",
+      "content": "",
+      "ua": "",
+      "display-name": "",
+      "label": "S3"
+    }
+  ],
+  "collections": [
+    {
+      "name": "S2-Oracle",
+      "displayName": "",
+      "icon": "",
+      "process": [
+        {
+          "type": "Quick Setting Operator",
+          "args": {
+            "useless": "DISABLED",
+            "udp": "DEFAULT",
+            "scert": "DEFAULT",
+            "tfo": "DEFAULT",
+            "vmess aead": "DEFAULT"
+          }
+        },
+        {
+          "type": "Script Operator",
+          "args": {
+            "content": "https://g.wdd.space/https://raw.githubusercontent.com/Keywos/rule/main/rename.js#bl&one&clear&in&out=us&name=Oracle",
+            "mode": "link"
+          },
+          "id": "27829816.760887627"
+        },
+        {
+          "type": "Flag Operator",
+          "args": { "mode": "add" },
+          "id": "54639900.008244656"
+        },
+        {
+          "type": "Regex Sort Operator",
+          "args": ["JP", "KR", "SG"],
+          "id": "28798312.200415798"
+        }
+      ],
+      "subscriptions": ["S2-Oralce-alban", "S2-Oralce-ddgksf2013"],
+      "display-name": ""
+    }
+  ],
+  "artifacts": [],
+  "rules": [],
+  "schemaVersion": "2.0",
+  "settings": {
+    "githubUser": "wddclass",
+    "gistToken": "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",
+    "syncTime": 1692462394560,
+    "theme": {
+      "auto": true,
+      "name": "dark",
+      "dark": "monokai",
+      "light": "light"
+    },
+    "artifactStore": "https://gist.github.com/wddclass/483e6d16bd2c31a1ff3fe2c3df9fd0ef",
+    "avatarUrl": "https://avatars.githubusercontent.com/u/10113276?v=4"
+  }
+}
