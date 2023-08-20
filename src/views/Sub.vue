@@ -61,7 +61,7 @@
       <div class="sticky-title-wrappers">
         <p class="list-title">{{ $t(`specificWord.singleSub`) }}</p>
       </div>
-      <nut-collapse v-model:active="subsActiveLabels" icon="down-arrow">
+      <nut-collapse v-if="subsGroup.length > 1" v-model:active="subsActiveLabels" icon="down-arrow">
         <nut-collapse-item v-for="(item, index) in subsGroup" :key="item.label" :name="index" :title="item.label">
           <draggable v-model="item.subs" @change="changeSubs" itemKey="name" :scroll-sensitivity="200"
             :force-fallback="true" :scrollSpeed="8" :scroll="true" v-bind="{
@@ -79,15 +79,29 @@
           </draggable>
         </nut-collapse-item>
       </nut-collapse>
+      <draggable v-else v-model="subs" @change="changeSubs" itemKey="name" :scroll-sensitivity="200"
+        :force-fallback="true" :scrollSpeed="8" :scroll="true" v-bind="{
+          animation: 200,
+          disabled: false,
+          delay: 200,
+          chosenClass: 'chosensub',
+          handle: 'div'
+        }">
+        <template #item="{ element }">
+          <div :key="element.name" class="drag-item">
+            <SubListItem :sub="element" type="sub" />
+          </div>
+        </template>
+      </draggable>
     </div>
 
     <div v-if="hasCollections" class="subs-list-wrapper">
       <div class="sticky-title-wrappers">
         <p class="list-title">{{ $t(`specificWord.collectionSub`) }}</p>
       </div>
-      <nut-collapse v-model:active="collectionsActiveLabels" icon="down-arrow">
+      <nut-collapse v-if="collectionsGroup.length > 1" v-model:active="collectionsActiveLabels" icon="down-arrow">
         <nut-collapse-item v-for="(item, index) in collectionsGroup" :key="item.label" :name="index" :title="item.label">
-          <draggable v-model="item.collections" @input="sortCollections" @change="changeCollections" itemKey="name"
+          <draggable v-model="item.collections" @change="changeCollections" itemKey="name"
             :scroll-sensitivity="200" :force-fallback="true" :scrollSpeed="8" :scroll="true" v-bind="{
               animation: 200,
               disabled: false,
@@ -103,6 +117,20 @@
           </draggable>
         </nut-collapse-item>
       </nut-collapse>
+      <draggable v-else v-model="collections" @change="changeCollections" itemKey="name"
+        :scroll-sensitivity="200" :force-fallback="true" :scrollSpeed="8" :scroll="true" v-bind="{
+          animation: 200,
+          disabled: false,
+          delay: 200,
+          chosenClass: 'chosensub',
+          handle: 'div'
+        }">
+        <template #item="{ element }">
+          <div :key="element.name" class="drag-item">
+            <SubListItem :collection="element" type="collection" />
+          </div>
+        </template>
+      </draggable>
     </div>
 
     <!--没有数据-->
@@ -207,12 +235,14 @@ const refresh = () => {
 };
 
 const changeSubs = async () => {
-  let subsArr = []
-  for (let i = 0; i < subsGroup.value.length; i++) {
-    const element = subsGroup.value[i];
-    subsArr = [...subsArr, ...element.subs]
+  if (subsGroup.value.length > 1) {
+    let subsArr = []
+    for (let i = 0; i < subsGroup.value.length; i++) {
+      const element = subsGroup.value[i];
+      subsArr = [...subsArr, ...element.subs]
+    }
+    subs.value = subsArr
   }
-  subs.value = subsArr
   const changeSubsValue = JSON.parse(JSON.stringify(subs.value))
   if (isSortMode.value) {
     sortSubsArr.value = changeSubsValue;
@@ -222,17 +252,15 @@ const changeSubs = async () => {
 };
 
 
-const sortCollections = (newCollections: any) => {
-  collections.value = newCollections;
-};
-
 const changeCollections = async () => {
-  let subsArr = []
-  for (let i = 0; i < collectionsGroup.value.length; i++) {
-    const element = collectionsGroup.value[i];
-    subsArr = [...subsArr, ...element.collections]
+  if (collectionsGroup.value.length > 1) {
+    let subsArr = []
+    for (let i = 0; i < collectionsGroup.value.length; i++) {
+      const element = collectionsGroup.value[i];
+      subsArr = [...subsArr, ...element.collections]
+    }
+    collections.value = subsArr
   }
-  collections.value = subsArr
   await subsApi.sortSub('collections', JSON.parse(JSON.stringify(collections.value)));
   // showNotify({ title: '6666' });
 };
