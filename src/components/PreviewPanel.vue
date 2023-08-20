@@ -22,6 +22,7 @@ import quanx from '@/assets/icons/quanx.png';
 import loon from '@/assets/icons/loon.png';
 import stash from '@/assets/icons/stash.png';
 import shadowrocket from '@/assets/icons/shadowrocket.png';
+import v2ray from '@/assets/icons/v2ray.png';
 import { useClipboard } from '@vueuse/core';
 import useV3Clipboard from 'vue-clipboard3';
 import { useAppNotifyStore } from '@/store/appNotify';
@@ -66,6 +67,11 @@ const platformList = [
     name: 'ShadowRocket',
     path: 'ShadowRocket',
     icon: shadowrocket,
+  },
+  {
+    name: 'V2Ray',
+    path: 'V2Ray',
+    icon: v2ray,
   },
 ];
 const copyLink = async path => {
