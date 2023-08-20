@@ -100,7 +100,8 @@
       <div class="sticky-title-wrappers">
         <p class="list-title">{{ $t(`specificWord.collectionSub`) }}</p>
       </div>
-      <nut-collapse v-if="collectionsGroup.length > 1" v-model:active="collectionsActiveLabels" icon="down-arrow" @change="changeCollectionsActive">
+      <nut-collapse v-if="collectionsGroup.length > 1" v-model:active="collectionsActiveLabels" icon="down-arrow"
+        @change="changeCollectionsActive">
         <nut-collapse-item v-for="(item, index) in collectionsGroup" :key="item.label" :name="index" :title="item.label">
           <draggable v-model="item.collections" @change="changeCollections" itemKey="name" :scroll-sensitivity="200"
             :force-fallback="true" :scrollSpeed="8" :scroll="true" v-bind="{
@@ -276,8 +277,8 @@ const changeCollectionsActive = (activeLabels) => {
   collectionsActiveLabels.value = activeLabels;
 }
 onMounted(() => {
-  subsActiveLabels.value = localStorage.getItem('subsActiveLabels') ? JSON.parse(localStorage.getItem('subsActiveLabels')) : [] || subsGroupActive;
-  collectionsActiveLabels.value = localStorage.getItem('collectionsActiveLabels') ? JSON.parse(localStorage.getItem('collectionsActiveLabels')) : [] || collectionsGroupActive;
+  subsActiveLabels.value = localStorage.getItem('subsActiveLabels') ? JSON.parse(localStorage.getItem('subsActiveLabels')) : subsGroupActive;
+  collectionsActiveLabels.value = localStorage.getItem('collectionsActiveLabels') ? JSON.parse(localStorage.getItem('collectionsActiveLabels')) : collectionsGroupActive;
 });
 </script>
 
