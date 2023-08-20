@@ -61,7 +61,8 @@
       <div class="sticky-title-wrappers">
         <p class="list-title">{{ $t(`specificWord.singleSub`) }}</p>
       </div>
-      <nut-collapse v-if="subsGroup.length > 1" v-model:active="subsActiveLabels" icon="down-arrow">
+      <nut-collapse v-if="subsGroup.length > 1" v-model:active="subsActiveLabels" icon="down-arrow"
+        @change="changeSubsActive">
         <nut-collapse-item v-for="(item, index) in subsGroup" :key="item.label" :name="index" :title="item.label">
           <draggable v-model="item.subs" @change="changeSubs" itemKey="name" :scroll-sensitivity="200"
             :force-fallback="true" :scrollSpeed="8" :scroll="true" v-bind="{
@@ -99,10 +100,10 @@
       <div class="sticky-title-wrappers">
         <p class="list-title">{{ $t(`specificWord.collectionSub`) }}</p>
       </div>
-      <nut-collapse v-if="collectionsGroup.length > 1" v-model:active="collectionsActiveLabels" icon="down-arrow">
+      <nut-collapse v-if="collectionsGroup.length > 1" v-model:active="collectionsActiveLabels" icon="down-arrow" @change="changeCollectionsActive">
         <nut-collapse-item v-for="(item, index) in collectionsGroup" :key="item.label" :name="index" :title="item.label">
-          <draggable v-model="item.collections" @change="changeCollections" itemKey="name"
-            :scroll-sensitivity="200" :force-fallback="true" :scrollSpeed="8" :scroll="true" v-bind="{
+          <draggable v-model="item.collections" @change="changeCollections" itemKey="name" :scroll-sensitivity="200"
+            :force-fallback="true" :scrollSpeed="8" :scroll="true" v-bind="{
               animation: 200,
               disabled: false,
               delay: 200,
@@ -117,8 +118,8 @@
           </draggable>
         </nut-collapse-item>
       </nut-collapse>
-      <draggable v-else v-model="collections" @change="changeCollections" itemKey="name"
-        :scroll-sensitivity="200" :force-fallback="true" :scrollSpeed="8" :scroll="true" v-bind="{
+      <draggable v-else v-model="collections" @change="changeCollections" itemKey="name" :scroll-sensitivity="200"
+        :force-fallback="true" :scrollSpeed="8" :scroll="true" v-bind="{
           animation: 200,
           disabled: false,
           delay: 200,
@@ -226,8 +227,8 @@ const globalStore = useGlobalStore();
 const { hasSubs, hasCollections, subs, collections, subsGroup, subsGroupActive, collectionsGroup, collectionsGroupActive } = storeToRefs(subsStore);
 const { isLoading, fetchResult, bottomSafeArea } = storeToRefs(globalStore);
 
-const subsActiveLabels = ref(subsGroupActive);
-const collectionsActiveLabels = ref(collectionsGroupActive);
+const subsActiveLabels = ref([]);
+const collectionsActiveLabels = ref([]);
 
 const sortSubsArr = ref([]);
 const refresh = () => {
@@ -265,7 +266,18 @@ const changeCollections = async () => {
   // showNotify({ title: '6666' });
 };
 
+const changeSubsActive = (activeLabels) => {
+  localStorage.setItem('subsActiveLabels', JSON.stringify(activeLabels));
+  subsActiveLabels.value = activeLabels;
+};
+
+const changeCollectionsActive = (activeLabels) => {
+  localStorage.setItem('collectionsActiveLabels', JSON.stringify(activeLabels));
+  collectionsActiveLabels.value = activeLabels;
+}
 onMounted(() => {
+  subsActiveLabels.value = localStorage.getItem('subsActiveLabels') ? JSON.parse(localStorage.getItem('subsActiveLabels')) : [] || subsGroupActive;
+  collectionsActiveLabels.value = localStorage.getItem('collectionsActiveLabels') ? JSON.parse(localStorage.getItem('collectionsActiveLabels')) : [] || collectionsGroupActive;
 });
 </script>
 

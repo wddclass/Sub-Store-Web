@@ -34,6 +34,8 @@ export const initStores = async (
   // 更新所有数据
   try {
     localStorage.removeItem('envCache');
+    localStorage.removeItem('subsActiveLabels');
+    localStorage.removeItem('collectionsActiveLabels');
     await subsStore.fetchSubsData();
     await artifactsStore.fetchArtifactsData();
     await settingsStore.fetchSettings();
