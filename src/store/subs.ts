@@ -19,6 +19,13 @@ export const useSubsStore = defineStore('subsStore', {
       ],
       subsGroupActive: [],
       collections: [],
+      collectionsGroup: [
+        {
+          label: '其他',
+          collections: [],
+        },
+      ],
+      collectionsGroupActive: [],
       flows: {},
     };
   },
@@ -60,6 +67,9 @@ export const useSubsStore = defineStore('subsStore', {
               this.subsGroup[0].subs.push(element);
             }
           }
+          if (this.subsGroup.find(e => e.label === '其他').subs.length === 0) {
+            this.subsGroup.shift();
+          }
           const other = this.subsGroup.filter(item => item.label === '其他');
           const rest = this.subsGroup.filter(item => item.label !== '其他');
           this.subsGroup = rest.concat(other);
@@ -69,6 +79,36 @@ export const useSubsStore = defineStore('subsStore', {
         }
         if ('data' in res[1].data) {
           this.collections = res[1].data.data;
+          for (let i = 0; i < this.collections.length; i++) {
+            const element = this.collections[i];
+            if (
+              element.label &&
+              this.collectionsGroup.find(e => e.label === element.label)
+            ) {
+              this.collectionsGroup
+                .find(e => e.label === element.label)
+                .collections.push(element);
+            } else if (
+              element.label &&
+              !this.collectionsGroup.find(e => e.label === element.label)
+            ) {
+              this.collectionsGroup.push({
+                label: element.label,
+                collections: [element],
+              });
+            } else {
+              this.collectionsGroup[0].collections.push(element);
+            }
+          }
+          if (this.collectionsGroup.find(e => e.label === '其他').collections.length === 0) {
+            this.collectionsGroup.shift();
+          }
+          const other = this.collectionsGroup.filter(item => item.label === '其他');
+          const rest = this.collectionsGroup.filter(item => item.label !== '其他');
+          this.collectionsGroup = rest.concat(other);
+          for (let i = 0; i < this.collectionsGroup.length; i++) {
+            this.collectionsGroupActive.push(i);
+          }
         }
       });
     },

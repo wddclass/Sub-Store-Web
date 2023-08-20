@@ -3,6 +3,8 @@ interface SubsStoreState {
   subsGroup: subsGroup[];
   subsGroupActive: Array;
   collections: Collection[];
+  collectionsGroup: CollectionGroup[];
+  collectionsGroupActive: Array;
   flows: FlowsDict;
 }
 
@@ -51,6 +53,10 @@ interface Collection {
   process: Process[];
   subscriptions: string[];
   icon?: string;
+}
+interface CollectionGroup {
+  label?: string;
+  collections: Array;
 }
 
 interface Flow {
