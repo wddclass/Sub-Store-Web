@@ -277,8 +277,8 @@ const changeCollectionsActive = (activeLabels) => {
   collectionsActiveLabels.value = activeLabels;
 }
 onMounted(() => {
-  subsActiveLabels.value = localStorage.getItem('subsActiveLabels') ? JSON.parse(localStorage.getItem('subsActiveLabels')) : subsGroupActive;
-  collectionsActiveLabels.value = localStorage.getItem('collectionsActiveLabels') ? JSON.parse(localStorage.getItem('collectionsActiveLabels')) : collectionsGroupActive;
+  subsActiveLabels.value = localStorage.getItem('subsActiveLabels') ? JSON.parse(localStorage.getItem('subsActiveLabels')) : subsGroupActive.value;
+  collectionsActiveLabels.value = localStorage.getItem('collectionsActiveLabels') ? JSON.parse(localStorage.getItem('collectionsActiveLabels')) : collectionsGroupActive.value;
 });
 </script>
 
